@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VR Club</title>
-    <link rel="stylesheet" href="/web/styles.css">
+    <link rel="stylesheet" href="../web/styles.css">
 </head>
 <body>
     <!-- Шапка -->
@@ -16,7 +16,10 @@
             <h1>Очень крутое название клуба</h1>
         </div>
         <div class="admin-login">
-            <button>Вход для администратора</button>
+            <form enctype="multipart/form-data" method="post" action="/admin">
+                <button type="submit">Вход для администратора</button>
+            </form>
+            
         </div>
     </header>
 
