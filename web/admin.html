@@ -8,12 +8,11 @@
 </head>
 <body>
     <div class="admin-container">
-        <!-- Боковое меню -->
         <div class="sidebar">
             <ul>
                 <li><h2>Панель навигации</h2></li>
-                <li><a href="#tariffs">Документ с тарифами</a></li>
-                <li><a href="#clients">Документ с клиентами</a></li>
+                <li><a href="#clients">Клиенты</a></li>
+                <li><a href="#tariffs">Тарифы</a></li>
                 <li><a href="#bookings">Документ с бронированиями</a></li>
                 <li><a href="#tariff-stats">Документ с статистикой по тарифам</a></li>
                 <li><a href="#booking-stats">Документ с статистикой по броням</a></li>
@@ -22,35 +21,9 @@
             <header class="header-container">
                 <h1>Админская панель</h1>
             </header>
-        <!-- Основной контент -->
         <main>
-            <section id="tariffs">
-                <h2>Документ с тарифами</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Устройство</th>
-                            <th>Игра</th>
-                            <th>Тариф</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>VR-устройство 1</td>
-                            <td>Игра 1</td>
-                            <td>Тариф 1</td>
-                        </tr>
-                        <tr>
-                            <td>VR-устройство 2</td>
-                            <td>Игра 2</td>
-                            <td>Тариф 2</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-
             <section id="clients">
-                <h2>Документ с клиентами</h2>
+                <h2>Клиенты</h2>
                 <table>
                     <thead>
                         <tr>
@@ -60,20 +33,22 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {{range .Clients}}
                         <tr>
-                            <td>Иван Иванов</td>
-                            <td>+7 123 456 78 90</td>
-                            <td>ivan@mail.com</td>
+                            <td>{{.Name}}</td>
+                            <td>{{.Phone}}</td>
+                            <td>{{.Email}}</td>
                         </tr>
-                        <tr>
-                            <td>Мария Петрова</td>
-                            <td>+7 987 654 32 10</td>
-                            <td>maria@mail.com</td>
-                        </tr>
+                        {{end}}
                     </tbody>
                 </table>
             </section>
-
+            <section id="tariffs">
+                <h2>Тарифы</h2>
+                {{range .Tariffs}}
+                    <a class="tariff-button" href="/admin/tariff?id={{.Id}}">{{.Name}}</a>
+                {{end}}
+            </section>
             <section id="bookings">
                 <h2>Документ с бронированиями</h2>
                 <table>
@@ -86,12 +61,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Сергей Сергеев</td>
-                            <td>2024-11-20</td>
-                            <td>10:00</td>
-                            <td>4</td>
-                        </tr>
                     </tbody>
                 </table>
             </section>
@@ -106,14 +75,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Тариф 1</td>
-                            <td>20</td>
-                        </tr>
-                        <tr>
-                            <td>Тариф 2</td>
-                            <td>15</td>
-                        </tr>
                     </tbody>
                 </table>
             </section>
@@ -128,14 +89,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>2024-11-15</td>
-                            <td>5</td>
-                        </tr>
-                        <tr>
-                            <td>2024-11-16</td>
-                            <td>8</td>
-                        </tr>
                     </tbody>
                 </table>
             </section>

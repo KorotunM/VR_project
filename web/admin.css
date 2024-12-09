@@ -23,6 +23,27 @@ header h1 {
     flex-grow: 1;
 }
 
+/* кнопки для тарифов */
+.tariff-button {
+    display: block;
+    margin-bottom: 20px;
+    padding: 20px 20px;
+    border: 2px solid #fff;
+    color: white;
+    background-color: #3a3a66;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 24px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.tariff-button:hover {
+    background-color: #4c4c7a;
+    text-decoration: none;
+}
+/*  */
+
 .menu-btn {
     background-color: #4c8eff;
     color: white;

@@ -2,5 +2,15 @@
   "_id": {
     "$oid": "674233b0052f44f30e9d755b"
   },
-  "name": "Leoni"
+  "name": "Leonid",
+  "email": "pupalupa@gmail.com",
+  "phone number": "89807672040"
+},
+{
+  "_id": {
+    "$oid": "675731533029b58fc4892313"
+  },
+  "name": "Albert",
+  "phone number": "+79815602010",
+  "email": "bigbrain@gmail.com"
 }]

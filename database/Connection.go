@@ -11,61 +11,121 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type ExampleDocument struct {
-	Name  string `bson:"name"`
-	Value int    `bson:"value"`
-}
+var MongoClient *mongo.Client
 
-func Connect() {
+// Инициализация клиента MongoDB
+func InitMongoDB(uri string) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	// Подключение к MongoDB (без аутентификации)
-	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
-
-	client, err := mongo.Connect(ctx, clientOptions)
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
 	if err != nil {
 		log.Fatalf("Ошибка подключения к MongoDB: %v", err)
 	}
-	defer func() {
-		if err := client.Disconnect(ctx); err != nil {
-			log.Fatalf("Ошибка отключения: %v", err)
-		}
-	}()
 
-	// Проверка подключения
-	err = client.Ping(ctx, nil)
-	if err != nil {
+	// Проверяем подключение
+	if err := client.Ping(ctx, nil); err != nil {
 		log.Fatalf("MongoDB не отвечает: %v", err)
 	}
 
-	fmt.Println("Успешное подключение к MongoDB")
+	MongoClient = client
+	log.Println("Подключение к MongoDB успешно инициализировано")
+}
 
-	// Работа с базой данных и коллекцией
-	db := client.Database("Vr")          // Замените "exampleDB" на имя вашей базы
-	collection := db.Collection("Users") // Замените "example" на имя коллекции
+// Закрытие подключения
+func CloseMongoDB() {
+	if MongoClient != nil {
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+		if err := MongoClient.Disconnect(ctx); err != nil {
+			log.Fatalf("Ошибка отключения от MongoDB: %v", err)
+		}
+		log.Println("Подключение к MongoDB закрыто")
+	}
+}
 
-	fmt.Printf("Работаем с коллекцией: %s\n", collection.Name())
+// Подключение к MongoDB и получения данных клиентов
+func GetClients() ([]Client, error) {
 
-	filter := bson.M{}                        // Пустой фильтр для получения всех документов
-	projection := bson.M{"_id": 1, "name": 1} // Включить только _id и name
+	// для автоматического выключения, если запрос завис
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 
-	options := options.Find().SetProjection(projection)
+	// Работа с коллекцией
+	db := MongoClient.Database("Vr")
+	collection := db.Collection("Users")
 
-	cursor, err := collection.Find(ctx, filter, options)
+	// Поиск всех документов
+	filter := bson.M{} // Пустой фильтр для получения всех документов
+	cursor, err := collection.Find(ctx, filter)
 	if err != nil {
-		log.Fatalf("Ошибка поиска: %v", err)
+		return nil, fmt.Errorf("error search users: %v", err)
 	}
 	defer cursor.Close(ctx)
 
-	// Чтение документов из курсора
-	var results []bson.M
-	if err := cursor.All(ctx, &results); err != nil {
-		log.Fatalf("Ошибка чтения результатов: %v", err)
+	// Считывание результатов
+	var clients []Client
+	if err := cursor.All(ctx, &clients); err != nil {
+		return nil, fmt.Errorf("error users reading: %v", err)
 	}
 
-	fmt.Println("Результаты в формате JSON:")
-	fmt.Println(results)
+	return clients, nil
 }
 
-//mongodb://localhost:27017/
+func GetTariffs() ([]TariffTitle, error) {
+	var tariffs []TariffTitle
+
+	// для автоматического выключения, если запрос завис
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	// Работа с коллекцией
+	db := MongoClient.Database("Vr")
+	collection := db.Collection("Tariffs")
+
+	filter := bson.M{} // Получаем все тарифы
+	cursor, err := collection.Find(ctx, filter)
+	if err != nil {
+		return nil, fmt.Errorf("error search tariffs: %v", err)
+	}
+	defer cursor.Close(ctx)
+
+	if err := cursor.All(ctx, &tariffs); err != nil {
+		return nil, fmt.Errorf("error tariffs reading: %v", err)
+	}
+
+	return tariffs, nil
+
+	// // Обрабатываем курсор вручную, чтобы преобразовать _id в строку
+	// for cursor.Next(ctx) {
+	//     var tariff TariffTitle
+	//     var raw bson.M
+
+	//     // Декодируем документ в bson.M
+	//     if err := cursor.Decode(&raw); err != nil {
+	//         return nil, fmt.Errorf("error decoding tariff: %v", err)
+	//     }
+
+	//     // Преобразуем _id в строку
+	//     if id, ok := raw["_id"].(primitive.ObjectID); ok {
+	//         tariff.ID = id.Hex() // Сохраняем _id как строку
+	//     } else {
+	//         return nil, fmt.Errorf("invalid _id type")
+	//     }
+
+	//     // Декодируем остальные поля
+	//     if name, ok := raw["name"].(string); ok {
+	//         tariff.Name = name
+	//     } else {
+	//         return nil, fmt.Errorf("invalid name type")
+	//     }
+
+	//     tariffs = append(tariffs, tariff)
+	// }
+
+	// if err := cursor.Err(); err != nil {
+	//     return nil, fmt.Errorf("error iterating tariffs: %v", err)
+	// }
+
+	// return tariffs, nil
+}
