@@ -8,12 +8,16 @@ import (
 )
 
 func HomePage(w http.ResponseWriter, r *http.Request) {
-	tmp, err := template.ParseFiles("../web/index.html")
+	tmp, err := template.ParseFiles("../web/templates/index.html")
 	if err != nil {
-		fmt.Fprintf(w, "Error: %v", err)
+		fmt.Fprintf(w, "Error loading template: %v", err)
 		return
 	}
-	tmp.Execute(w, nil)
+	err = tmp.Execute(w, nil)
+	if err != nil {
+		fmt.Fprintf(w, "Error rendering template: %v", err)
+		return
+	}
 }
 
 func AdminPage(w http.ResponseWriter, r *http.Request) {
@@ -23,12 +27,12 @@ func AdminPage(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Error receiving clients: %v", err)
 		return
 	}
-	tariffs, err := database.GetTariffs()
+	tariffs, err := database.GetAllTariffs()
 	if err != nil {
 		fmt.Fprintf(w, "Error receiving tariffs: %v", err)
 		return
 	}
-	tmp, err := template.ParseFiles("../web/admin.html")
+	tmp, err := template.ParseFiles("../web/templates/admin.html")
 	if err != nil {
 		fmt.Fprintf(w, "Error loading template: %v", err)
 		return
@@ -36,6 +40,29 @@ func AdminPage(w http.ResponseWriter, r *http.Request) {
 	adminPageData.Clients = clients
 	adminPageData.Tariffs = tariffs
 	err = tmp.Execute(w, adminPageData)
+	if err != nil {
+		fmt.Fprintf(w, "Error rendering template: %v", err)
+		return
+	}
+}
+
+func TariffPage(w http.ResponseWriter, r *http.Request) {
+	var (
+		tariff database.Tariff
+		err    error
+	)
+	tariff, err = database.GetTariff(r)
+	if err != nil {
+		fmt.Fprintf(w, "Error getting the tariff: %v", err)
+		return
+	}
+	tmpl, err := template.ParseFiles("../web/templates/tariff.html")
+	if err != nil {
+		fmt.Fprintf(w, "Error loading template: %v", err)
+		return
+	}
+
+	err = tmpl.Execute(w, tariff)
 	if err != nil {
 		fmt.Fprintf(w, "Error rendering template: %v", err)
 		return

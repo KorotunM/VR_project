@@ -13,4 +13,5 @@ func HandlerPages() {
 	// Отображение страниц
 	http.HandleFunc("/", HomePage)
 	http.HandleFunc("/admin", AdminPage)
+	http.HandleFunc("/admin/tariff", TariffPage)
 }

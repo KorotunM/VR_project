@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../web/css/admin.css">
+
+    <title>Тариф</title>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="sidebar">
+            <ul class="sidebar-button-container">
+                <li><h2 class="sidebar-title">Панель управления</h2></li>
+                <li><a class="sidebar-button" href="#games">Игры</a></li>
+                <li><a class="sidebar-button" href="#devices">Устройства</a></li>
+            </ul>
+            <a class="sidebar-back-button" href="/admin">Назад</a>
+        </div>
+        <header class="header-container">
+            <h1>Тариф {{.Name}}</h1>
+        </header>
+        <main>
+            <h2>Цена: {{.Price}} руб.</h2>
+            <section id="games">
+                <h2>Игры</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Название</th>
+                            <th>Жанр</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{range .Games}}
+                        <tr>
+                            <td>{{.Name}}</td>
+                            <td>{{.Genre}}</td>
+                        </tr>
+                        {{end}}
+                    </tbody>
+                </table>
+            </section>
+            <section id="devices">
+                <h2>Устройства</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Название</th>
+                            <th>Платформа</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{range .Devices}}
+                        <tr>
+                            <td>{{.Name}}</td>
+                            <td>{{.Platform}}</td>
+                        </tr>
+                        {{end}}
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

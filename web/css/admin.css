@@ -1,0 +1,137 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #1c1c44;
+    color: #fff;
+}
+
+.admin-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.header-container{
+    text-align: center;
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    margin-left: 20%;
+    background-color: #2a2a5a;
+}
+
+header h1 {
+    margin: 0;
+    flex-grow: 1;
+}
+
+/* боковое меню */
+.sidebar-title {
+    padding: 4% 3%;
+}
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    width: 20%;
+    background-color: #1e1e3e;
+    color: white;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar ul li {
+    margin: 0;
+}
+
+.sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+}
+.sidebar-button {
+    display: block;
+    width: 94%;
+    padding: 4% 3%;
+    text-decoration: none;
+}
+
+.sidebar-button:hover {
+    background-color: #2d2d5d;
+    text-decoration: none;
+}
+
+.sidebar-back-button {
+    font-size: 18px;
+    display: block;
+    width: 80%;
+    padding: 5% 3%;
+    margin: 5% auto;
+    margin-bottom: 15%;
+    background-color: #2d2d5d;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.sidebar-back-button:hover {
+    background-color: #45457e;
+}
+/*  */
+
+/* кнопки для тарифов */
+.tariff-button {
+    display: block;
+    margin-bottom: 20px;
+    padding: 20px 20px;
+    border: 2px solid #fff;
+    color: white;
+    background-color: #3a3a66;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 24px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.tariff-button:hover {
+    background-color: #4c4c7a;
+    text-decoration: none;
+}
+/*  */
+
+main {
+    padding: 20px;
+    margin-left: 20%;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table th, table td {
+    border: 1px solid #fff;
+    padding: 10px;
+    text-align: left;
+}
+
+table th {
+    background-color: #535383;
+}
+
+table td {
+    background-color: #3a3a66;
+}

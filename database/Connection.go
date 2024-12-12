@@ -4,9 +4,11 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net/http"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -20,16 +22,15 @@ func InitMongoDB(uri string) {
 
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
 	if err != nil {
-		log.Fatalf("Ошибка подключения к MongoDB: %v", err)
+		log.Fatalf("Error connection to MongoDB: %v", err)
 	}
 
 	// Проверяем подключение
 	if err := client.Ping(ctx, nil); err != nil {
-		log.Fatalf("MongoDB не отвечает: %v", err)
+		log.Fatalf("MongoDB is not responding: %v", err)
 	}
 
 	MongoClient = client
-	log.Println("Подключение к MongoDB успешно инициализировано")
 }
 
 // Закрытие подключения
@@ -38,9 +39,9 @@ func CloseMongoDB() {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 		if err := MongoClient.Disconnect(ctx); err != nil {
-			log.Fatalf("Ошибка отключения от MongoDB: %v", err)
+			log.Fatalf("Error disconnecting from MongoDB: %v", err)
 		}
-		log.Println("Подключение к MongoDB закрыто")
+		log.Println("Connection to MongoDB is closed")
 	}
 }
 
@@ -72,7 +73,7 @@ func GetClients() ([]Client, error) {
 	return clients, nil
 }
 
-func GetTariffs() ([]TariffTitle, error) {
+func GetAllTariffs() ([]TariffTitle, error) {
 	var tariffs []TariffTitle
 
 	// для автоматического выключения, если запрос завис
@@ -128,4 +129,31 @@ func GetTariffs() ([]TariffTitle, error) {
 	// }
 
 	// return tariffs, nil
+}
+
+func GetTariff(r *http.Request) (Tariff, error) {
+	var (
+		tariffId       string
+		objectTariffId primitive.ObjectID
+		tariff         Tariff
+	)
+	tariffId = r.URL.Query().Get("id")
+	if tariffId == "" {
+		return tariff, fmt.Errorf("error taking id")
+	}
+
+	// Конвертируем строковый ID в ObjectID
+	objectTariffId, err := primitive.ObjectIDFromHex(tariffId)
+	if err != nil {
+		return tariff, fmt.Errorf("error convertation: %v", err)
+	}
+
+	db := MongoClient.Database("Vr")
+	collection := db.Collection("Tariffs")
+
+	err = collection.FindOne(context.TODO(), bson.M{"_id": objectTariffId}).Decode(&tariff)
+	if err != nil {
+		return tariff, fmt.Errorf("error taking a tariff from MongoDB: %v", err)
+	}
+	return tariff, nil
 }
