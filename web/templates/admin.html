@@ -19,6 +19,7 @@
                 <li><a class="sidebar-button" href="#tariff-stats">Документ с статистикой по тарифам</a></li>
                 <li><a class="sidebar-button" href="#booking-stats">Документ с статистикой по броням</a></li>
             </ul>
+            <a class="sidebar-back-button" href="/">Выйти</a>
         </div>
             <header class="header-container">
                 <h1>Админская панель</h1>
@@ -28,7 +29,7 @@
                 <h2>Клиенты</h2>
                 <table>
                     <thead>
-                        <tr>
+                        <tr class="table-header">
                             <th>ФИО</th>
                             <th>Телефон</th>
                             <th>Email</th>
@@ -36,7 +37,7 @@
                     </thead>
                     <tbody>
                         {{range .Clients}}
-                        <tr>
+                        <tr class="table-body">
                             <td>{{.Name}}</td>
                             <td>{{.Phone}}</td>
                             <td>{{.Email}}</td>
@@ -55,7 +56,7 @@
                 <h2>Документ с бронированиями</h2>
                 <table>
                     <thead>
-                        <tr>
+                        <tr class="table-header">
                             <th>ФИО</th>
                             <th>Дата бронирования</th>
                             <th>Время</th>
@@ -71,7 +72,7 @@
                 <h2>Документ с статистикой по тарифам</h2>
                 <table>
                     <thead>
-                        <tr>
+                        <tr class="table-header">
                             <th>Тариф</th>
                             <th>Количество использований</th>
                         </tr>
@@ -85,7 +86,7 @@
                 <h2>Документ с статистикой по броням</h2>
                 <table>
                     <thead>
-                        <tr>
+                        <tr class="table-header">
                             <th>Дата</th>
                             <th>Количество броней</th>
                         </tr>

@@ -2,6 +2,7 @@ package interfaces
 
 import (
 	"VR_project/database"
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"net/http"
@@ -67,4 +68,14 @@ func TariffPage(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Error rendering template: %v", err)
 		return
 	}
+}
+
+func DeleteElementTariff(w http.ResponseWriter, r *http.Request) {
+	var err error = database.DeleteElementTariffDB(r)
+	if err != nil {
+		fmt.Fprintf(w, "Error deleting element tariff: %v", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"success": "true"})
 }

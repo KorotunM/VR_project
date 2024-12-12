@@ -33,3 +33,8 @@ type Device struct {
 	Name     string `bson:"name"`
 	Platform string `bson:"platform"`
 }
+
+type AjaxDeleteElementTariff struct {
+	Type string `json:"type"`
+	Name string `json:"name"`
+}

@@ -14,4 +14,5 @@ func HandlerPages() {
 	http.HandleFunc("/", HomePage)
 	http.HandleFunc("/admin", AdminPage)
 	http.HandleFunc("/admin/tariff", TariffPage)
+	http.HandleFunc("/admin/tariff/delete/element", DeleteElementTariff)
 }

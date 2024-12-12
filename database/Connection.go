@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -96,39 +97,6 @@ func GetAllTariffs() ([]TariffTitle, error) {
 	}
 
 	return tariffs, nil
-
-	// // Обрабатываем курсор вручную, чтобы преобразовать _id в строку
-	// for cursor.Next(ctx) {
-	//     var tariff TariffTitle
-	//     var raw bson.M
-
-	//     // Декодируем документ в bson.M
-	//     if err := cursor.Decode(&raw); err != nil {
-	//         return nil, fmt.Errorf("error decoding tariff: %v", err)
-	//     }
-
-	//     // Преобразуем _id в строку
-	//     if id, ok := raw["_id"].(primitive.ObjectID); ok {
-	//         tariff.ID = id.Hex() // Сохраняем _id как строку
-	//     } else {
-	//         return nil, fmt.Errorf("invalid _id type")
-	//     }
-
-	//     // Декодируем остальные поля
-	//     if name, ok := raw["name"].(string); ok {
-	//         tariff.Name = name
-	//     } else {
-	//         return nil, fmt.Errorf("invalid name type")
-	//     }
-
-	//     tariffs = append(tariffs, tariff)
-	// }
-
-	// if err := cursor.Err(); err != nil {
-	//     return nil, fmt.Errorf("error iterating tariffs: %v", err)
-	// }
-
-	// return tariffs, nil
 }
 
 func GetTariff(r *http.Request) (Tariff, error) {
@@ -156,4 +124,41 @@ func GetTariff(r *http.Request) (Tariff, error) {
 		return tariff, fmt.Errorf("error taking a tariff from MongoDB: %v", err)
 	}
 	return tariff, nil
+}
+
+func DeleteElementTariffDB(r *http.Request) error {
+	var (
+		requestData AjaxDeleteElementTariff
+		filter      bson.M
+		update      bson.M
+		err         error
+	)
+	if r.Method != http.MethodPost {
+		return fmt.Errorf("error method: %v", err)
+	}
+	if err := json.NewDecoder(r.Body).Decode(&requestData); err != nil {
+		return fmt.Errorf("error getting data from template: %v", err)
+	}
+
+	db := MongoClient.Database("Vr")
+	collection := db.Collection("Tariffs")
+
+	// Проверяем тип элемента (игра или устройство)
+	switch requestData.Type {
+	case "game":
+		filter = bson.M{"games.name": requestData.Name}
+		update = bson.M{"$pull": bson.M{"games": bson.M{"name": requestData.Name}}}
+	case "device":
+		filter = bson.M{"devices.name": requestData.Name}
+		update = bson.M{"$pull": bson.M{"devices": bson.M{"name": requestData.Name}}}
+	default:
+		return fmt.Errorf("error data: %v", err)
+	}
+
+	// Обновляем документ: удаляем указанный элемент
+	_, err = collection.UpdateOne(context.TODO(), filter, update)
+	if err != nil {
+		return fmt.Errorf("error deleting data: %v", err)
+	}
+	return nil
 }

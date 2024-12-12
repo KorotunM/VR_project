@@ -6,6 +6,8 @@
 
     <link rel="stylesheet" href="../web/css/admin.css">
 
+    <script defer src="../web/js/tariffDelete.js"></script>
+
     <title>Тариф</title>
 </head>
 <body>
@@ -16,6 +18,10 @@
                 <li><a class="sidebar-button" href="#games">Игры</a></li>
                 <li><a class="sidebar-button" href="#devices">Устройства</a></li>
             </ul>
+            <div class="sidebar-buttons">
+                <!-- кнопка "изменить" -->
+                <a id="delete-button" class="sidebar-action-button disabled" href="#">Удалить</a>
+            </div>
             <a class="sidebar-back-button" href="/admin">Назад</a>
         </div>
         <header class="header-container">
@@ -27,14 +33,14 @@
                 <h2>Игры</h2>
                 <table>
                     <thead>
-                        <tr>
+                        <tr class="table-header">
                             <th>Название</th>
                             <th>Жанр</th>
                         </tr>
                     </thead>
                     <tbody>
                         {{range .Games}}
-                        <tr>
+                        <tr class="table-body">
                             <td>{{.Name}}</td>
                             <td>{{.Genre}}</td>
                         </tr>
@@ -46,14 +52,14 @@
                 <h2>Устройства</h2>
                 <table>
                     <thead>
-                        <tr>
+                        <tr class="table-header">
                             <th>Название</th>
                             <th>Платформа</th>
                         </tr>
                     </thead>
                     <tbody>
                         {{range .Devices}}
-                        <tr>
+                        <tr class="table-body">
                             <td>{{.Name}}</td>
                             <td>{{.Platform}}</td>
                         </tr>
