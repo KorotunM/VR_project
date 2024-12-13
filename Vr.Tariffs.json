@@ -1,0 +1,117 @@
+[{
+  "_id": {
+    "$oid": "675b61bc4001d3e9c33e2726"
+  },
+  "name": "Базовый",
+  "price": 3000,
+  "games": [
+    {
+      "name": "Bioshock",
+      "genre": "Шутер"
+    },
+    {
+      "name": "Darkest dungeon",
+      "genre": "Стратегия"
+    },
+    {
+      "name": "Dota 2",
+      "genre": "Tower defence"
+    }
+  ],
+  "devices": [
+    {
+      "name": "Компьютер 1",
+      "platform": "PC"
+    },
+    {
+      "name": "Компьютер 2",
+      "platform": "PC"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "675bf08ca58d1368932c8973"
+  },
+  "name": "Плюс",
+  "price": 5000,
+  "games": [
+    {
+      "name": "Bioshock",
+      "genre": "Шутер"
+    },
+    {
+      "name": "Darkest dungeon",
+      "genre": "Стратегия"
+    },
+    {
+      "name": "Dota 2",
+      "genre": "Tower defence"
+    },
+    {
+      "name": "Subnautica",
+      "genre": "Выживание"
+    }
+  ],
+  "devices": [
+    {
+      "name": "Компьютер 1",
+      "platform": "PC"
+    },
+    {
+      "name": "Компьютер 2",
+      "platform": "PC"
+    },
+    {
+      "name": "Vr очки",
+      "platform": "VR"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "675bf10aa58d1368932c8974"
+  },
+  "name": "Премиум",
+  "price": 10000,
+  "games": [
+    {
+      "name": "Bioshock",
+      "genre": "Шутер"
+    },
+    {
+      "name": "Darkest dungeon",
+      "genre": "Стратегия"
+    },
+    {
+      "name": "Dota 2",
+      "genre": "Tower defence"
+    },
+    {
+      "name": "Subnautica",
+      "genre": "Выживание"
+    },
+    {
+      "name": "Dredge",
+      "genre": "Приключение"
+    }
+  ],
+  "devices": [
+    {
+      "name": "Компьютер 1",
+      "platform": "PC"
+    },
+    {
+      "name": "Компьютер 2",
+      "platform": "PC"
+    },
+    {
+      "name": "Vr очки",
+      "platform": "VR"
+    },
+    {
+      "name": "Play station 5",
+      "platform": "PS"
+    }
+  ]
+}]
