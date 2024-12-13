@@ -4,6 +4,15 @@ document.addEventListener("DOMContentLoaded", function () {
     let selectedRow = null; // Текущая выбранная строка
     let selectedType = ""; // Тип: "game" или "device"
 
+     // Добавляем _id тарифа в URL
+     const urlParams = new URLSearchParams(window.location.search);
+     const tariffId = urlParams.get("id"); // Получаем значение параметра "id"
+     if (!tariffId) {
+         console.error("Не удалось определить _id тарифа из URL");
+         return;
+     }
+ 
+
     rows.forEach(row => {
         row.addEventListener("click", function () {
             // Определяем таблицу, из которой строка (игры или устройства)
@@ -36,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const name = selectedRow.querySelector("td").textContent.trim(); // Имя игры или устройства
 
         // AJAX-запрос для удаления
-        fetch("/admin/tariff/delete/element", {
+        fetch(`/admin/tariff/delete/element?id=${tariffId}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ type: selectedType, name })

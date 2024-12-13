@@ -128,11 +128,16 @@ func GetTariff(r *http.Request) (Tariff, error) {
 
 func DeleteElementTariffDB(r *http.Request) error {
 	var (
+		tariffId    string
 		requestData AjaxDeleteElementTariff
 		filter      bson.M
 		update      bson.M
 		err         error
 	)
+	tariffId = r.URL.Query().Get("id")
+	if tariffId == "" {
+		return fmt.Errorf("error getting id tariff from URL: %v", err)
+	}
 	if r.Method != http.MethodPost {
 		return fmt.Errorf("error method: %v", err)
 	}
@@ -142,6 +147,12 @@ func DeleteElementTariffDB(r *http.Request) error {
 
 	db := MongoClient.Database("Vr")
 	collection := db.Collection("Tariffs")
+
+	// Формируем фильтр с использованием tariffId
+
+	// TODO: конвертировать string в objectID!!!!
+
+	filter = bson.M{"_id": tariffId}
 
 	// Проверяем тип элемента (игра или устройство)
 	switch requestData.Type {
