@@ -33,6 +33,19 @@ func AddGame(w http.ResponseWriter, r *http.Request) (string, error) {
 	return "", nil
 }
 
+func EditGame(w http.ResponseWriter, r *http.Request) (string, error) {
+	var (
+		tariffId string
+		err      error
+	)
+	tariffId, err = database.EditGameDB(r)
+	if err != nil {
+		return "", fmt.Errorf("error editing game in tariff: %v", err)
+	}
+	http.Redirect(w, r, "/admin/tariff?id="+tariffId, http.StatusSeeOther)
+	return "", nil
+}
+
 func AddDevice(w http.ResponseWriter, r *http.Request) (string, error) {
 	var (
 		tariffId string
@@ -44,6 +57,19 @@ func AddDevice(w http.ResponseWriter, r *http.Request) (string, error) {
 			return "Такое устройство уже есть", nil
 		}
 		return "", fmt.Errorf("error adding device in tariff: %v", err)
+	}
+	http.Redirect(w, r, "/admin/tariff?id="+tariffId, http.StatusSeeOther)
+	return "", nil
+}
+
+func EditDevice(w http.ResponseWriter, r *http.Request) (string, error) {
+	var (
+		tariffId string
+		err      error
+	)
+	tariffId, err = database.EditDeviceDB(r)
+	if err != nil {
+		return "", fmt.Errorf("error editing device in tariff: %v", err)
 	}
 	http.Redirect(w, r, "/admin/tariff?id="+tariffId, http.StatusSeeOther)
 	return "", nil

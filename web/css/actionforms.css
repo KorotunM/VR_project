@@ -1,7 +1,7 @@
 /* Общие стили для формы */
 form {
     background-color: #2d2b55;
-    padding: 2%;
+    padding: 20px;
     border-radius: 5px;
     width: 70%;
     margin: 20px auto;
@@ -37,7 +37,6 @@ form input[type="text"]:focus {
 /* Обёртка для центрирования кнопки */
 form .button-container {
     text-align: center;
-    margin-top: 10px;
 }
 
 /* Кнопка */

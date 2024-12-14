@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="stylesheet" href="../../../web/css/admin.css">
-    <link rel="stylesheet" href="../../../web/css/adderforms.css">
+    <link rel="stylesheet" href="../../../web/css/actionforms.css">
 
-    <title>Добавить устройство</title>
+    <title>{{.Action}} игру</title>
 </head>
 <body>
     <div class="admin-container">
@@ -20,19 +20,19 @@
             <a class="sidebar-back-button" href="/admin/tariff?id={{.IdTariff}}">Отмена</a>
         </div>
         <header class="header-container">
-            <h1>Добавить устройство</h1>
+            <h1>{{.Action}} игру</h1>
         </header>
         <main>
-            {{if .Error}}
-            <p class="validation-text">{{.Error}}</p>
+            {{if .Validation}}
+            <p class="validation-text">{{.Validation}}</p>
             {{end}}
             <form action="#" method="POST">
                 <label for="name">Название:</label>
-                <input type="text" id="name" name="name" required />
-                <label for="genre">Платформа:</label>
-                <input type="text" id="platform" name="platform" required />
+                <input type="text" id="name" name="name" value="{{if .Name}}{{.Name}}{{end}}" required />
+                <label for="genre">Жанр:</label>
+                <input type="text" id="genre" name="genre" value="{{if .Genre}}{{.Genre}}{{end}}" required />
                 <div class="button-container">
-                    <button type="submit">Добавить</button>
+                    <button type="submit">{{.Action}}</button>
                 </div>
             </form>
         </main>

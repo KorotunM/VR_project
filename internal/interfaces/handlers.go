@@ -72,7 +72,7 @@ func TariffPage(w http.ResponseWriter, r *http.Request) {
 
 func AddGamePage(w http.ResponseWriter, r *http.Request) {
 	var (
-		answer               database.Validation
+		answer               database.AdminFormData
 		validation, tariffId string
 		err                  error
 	)
@@ -82,15 +82,55 @@ func AddGamePage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	answer.IdTariff = tariffId
+	answer.Action = "Добавить"
 	if r.Method == http.MethodPost {
 		validation, err = services.AddGame(w, r)
 		if err != nil {
 			fmt.Fprintf(w, "Error adding game: %v", err)
 			return
 		}
-		answer.Error = validation
+		answer.Validation = validation
 	}
-	tmp, err := template.ParseFiles("../web/templates/admin/addGame.html")
+	tmp, err := template.ParseFiles("../web/templates/admin/formGame.html")
+	if err != nil {
+		fmt.Fprintf(w, "Error loading template: %v", err)
+		return
+	}
+	err = tmp.Execute(w, answer)
+	if err != nil {
+		fmt.Fprintf(w, "Error rendering template: %v", err)
+		return
+	}
+}
+
+func EditGamePage(w http.ResponseWriter, r *http.Request) {
+	var (
+		answer                            database.AdminFormData
+		validation, tariffId, name, genre string
+		err                               error
+	)
+	tariffId = r.URL.Query().Get("id")
+	name = r.URL.Query().Get("name")
+	genre = r.URL.Query().Get("genre")
+
+	if tariffId == "" || name == "" || genre == "" {
+		fmt.Fprintf(w, "Error getting parameters from URL")
+		return
+	}
+	answer.IdTariff = tariffId
+	answer.Action = "Редактировать"
+	answer.Name = name
+	answer.Genre = genre
+
+	if r.Method == http.MethodPost {
+		validation, err = services.EditGame(w, r)
+		if err != nil {
+			fmt.Fprintf(w, "Error editing game: %v", err)
+			return
+		}
+		answer.Validation = validation
+	}
+	tmp, err := template.ParseFiles("../web/templates/admin/formGame.html")
 	if err != nil {
 		fmt.Fprintf(w, "Error loading template: %v", err)
 		return
@@ -104,7 +144,7 @@ func AddGamePage(w http.ResponseWriter, r *http.Request) {
 
 func AddDevicePage(w http.ResponseWriter, r *http.Request) {
 	var (
-		answer               database.Validation
+		answer               database.AdminFormData
 		validation, tariffId string
 		err                  error
 	)
@@ -114,15 +154,56 @@ func AddDevicePage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	answer.IdTariff = tariffId
+	answer.Action = "Добавить"
 	if r.Method == http.MethodPost {
 		validation, err = services.AddDevice(w, r)
 		if err != nil {
 			fmt.Fprintf(w, "Error adding device: %v", err)
 			return
 		}
-		answer.Error = validation
+		answer.Validation = validation
 	}
-	tmp, err := template.ParseFiles("../web/templates/admin/addDevice.html")
+	tmp, err := template.ParseFiles("../web/templates/admin/formDevice.html")
+	if err != nil {
+		fmt.Fprintf(w, "Error loading template: %v", err)
+		return
+	}
+	err = tmp.Execute(w, answer)
+	if err != nil {
+		fmt.Fprintf(w, "Error rendering template: %v", err)
+		return
+	}
+}
+
+func EditDevicePage(w http.ResponseWriter, r *http.Request) {
+	var (
+		answer                               database.AdminFormData
+		validation, tariffId, name, platform string
+		err                                  error
+	)
+	tariffId = r.URL.Query().Get("id")
+	name = r.URL.Query().Get("name")
+	platform = r.URL.Query().Get("platform")
+
+	if tariffId == "" || name == "" || platform == "" {
+		fmt.Fprintf(w, "Error getting parameters from URL")
+		return
+	}
+
+	answer.IdTariff = tariffId
+	answer.Action = "Редактировать"
+	answer.Name = name
+	answer.Platform = platform
+
+	if r.Method == http.MethodPost {
+		validation, err = services.EditDevice(w, r)
+		if err != nil {
+			fmt.Fprintf(w, "Error editing device: %v", err)
+			return
+		}
+		answer.Validation = validation
+	}
+	tmp, err := template.ParseFiles("../web/templates/admin/formDevice.html")
 	if err != nil {
 		fmt.Fprintf(w, "Error loading template: %v", err)
 		return
