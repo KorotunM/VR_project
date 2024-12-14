@@ -45,6 +45,12 @@ document.addEventListener("DOMContentLoaded", function () {
     deleteButton.addEventListener("click", function () {
         if (!selectedRow) return;
 
+        // Показываем подтверждение удаления
+        const confirmDelete = confirm("Вы уверены, что хотите удалить эту запись?");
+        if (!confirmDelete) {
+            return; // Если пользователь нажал "Отмена", прекращаем выполнение
+        }
+
         // Сбор данных из выбранной строки
         const name = selectedRow.querySelector("td").textContent.trim(); // Имя игры или устройства
 

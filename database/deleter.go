@@ -60,3 +60,28 @@ func DeleteElementTariffDB(r *http.Request) error {
 	}
 	return nil
 }
+
+func DeleteTariffDB(tariffId string) error {
+	var (
+		objectTariffId primitive.ObjectID
+		err            error
+	)
+
+	// Конвертируем ID тарифа в ObjectID
+	objectTariffId, err = primitive.ObjectIDFromHex(tariffId)
+	if err != nil {
+		return fmt.Errorf("error converting tariff ID to ObjectID: %v", err)
+	}
+
+	// Подключаемся к базе данных
+	db := MongoClient.Database("Vr")
+	collection := db.Collection("Tariffs")
+
+	// Удаляем тариф с указанным ID
+	_, err = collection.DeleteOne(context.TODO(), bson.M{"_id": objectTariffId})
+	if err != nil {
+		return fmt.Errorf("error deleting tariff: %v", err)
+	}
+
+	return nil
+}

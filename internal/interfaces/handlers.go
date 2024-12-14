@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"strconv"
 )
 
 func HomePage(w http.ResponseWriter, r *http.Request) {
@@ -72,7 +73,7 @@ func TariffPage(w http.ResponseWriter, r *http.Request) {
 
 func AddGamePage(w http.ResponseWriter, r *http.Request) {
 	var (
-		answer               database.AdminFormData
+		answer               database.AdminFormTariffData
 		validation, tariffId string
 		err                  error
 	)
@@ -105,7 +106,7 @@ func AddGamePage(w http.ResponseWriter, r *http.Request) {
 
 func EditGamePage(w http.ResponseWriter, r *http.Request) {
 	var (
-		answer                            database.AdminFormData
+		answer                            database.AdminFormTariffData
 		validation, tariffId, name, genre string
 		err                               error
 	)
@@ -144,7 +145,7 @@ func EditGamePage(w http.ResponseWriter, r *http.Request) {
 
 func AddDevicePage(w http.ResponseWriter, r *http.Request) {
 	var (
-		answer               database.AdminFormData
+		answer               database.AdminFormTariffData
 		validation, tariffId string
 		err                  error
 	)
@@ -177,7 +178,7 @@ func AddDevicePage(w http.ResponseWriter, r *http.Request) {
 
 func EditDevicePage(w http.ResponseWriter, r *http.Request) {
 	var (
-		answer                               database.AdminFormData
+		answer                               database.AdminFormTariffData
 		validation, tariffId, name, platform string
 		err                                  error
 	)
@@ -204,6 +205,79 @@ func EditDevicePage(w http.ResponseWriter, r *http.Request) {
 		answer.Validation = validation
 	}
 	tmp, err := template.ParseFiles("../web/templates/admin/formDevice.html")
+	if err != nil {
+		fmt.Fprintf(w, "Error loading template: %v", err)
+		return
+	}
+	err = tmp.Execute(w, answer)
+	if err != nil {
+		fmt.Fprintf(w, "Error rendering template: %v", err)
+		return
+	}
+}
+
+func AddTariffPage(w http.ResponseWriter, r *http.Request) {
+	var (
+		answer     database.AdminFormTariff
+		validation string
+		err        error
+	)
+	if r.Method == http.MethodPost {
+		validation, err = services.AddTariff(w, r)
+		if err != nil {
+			fmt.Fprintf(w, "Error adding tariff: %v", err)
+			return
+		}
+		answer.Validation = validation
+	}
+	answer.Action = "Добавить"
+	tmp, err := template.ParseFiles("../web/templates/admin/formTariff.html")
+	if err != nil {
+		fmt.Fprintf(w, "Error loading template: %v", err)
+		return
+	}
+	err = tmp.Execute(w, answer)
+	if err != nil {
+		fmt.Fprintf(w, "Error rendering template: %v", err)
+		return
+	}
+}
+
+func EditTariffPage(w http.ResponseWriter, r *http.Request) {
+	var (
+		answer                     database.AdminFormTariff
+		validation, name, tariffId string
+		err                        error
+		price                      int
+	)
+
+	name = r.URL.Query().Get("name")
+	tariffId = r.URL.Query().Get("id")
+	price, err = strconv.Atoi(r.URL.Query().Get("price"))
+
+	if name == "" || tariffId == "" {
+		fmt.Fprintf(w, "Error getting string parameters from URL")
+		return
+	}
+	if err != nil {
+		fmt.Fprintf(w, "Error getting tariff price from URL")
+		return
+	}
+
+	answer.IdTariff = tariffId
+	answer.Action = "Редактировать"
+	answer.Name = name
+	answer.Price = price
+
+	if r.Method == http.MethodPost {
+		validation, err = services.EditTariff(w, r)
+		if err != nil {
+			fmt.Fprintf(w, "Error editing tariff: %v", err)
+			return
+		}
+		answer.Validation = validation
+	}
+	tmp, err := template.ParseFiles("../web/templates/admin/formTariff.html")
 	if err != nil {
 		fmt.Fprintf(w, "Error loading template: %v", err)
 		return

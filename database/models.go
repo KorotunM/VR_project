@@ -17,9 +17,9 @@ type TariffTitle struct {
 }
 
 type Tariff struct {
-	Id      string   `bson:"_id"`
+	Id      string   `bson:"_id,omitempty"`
 	Name    string   `bson:"name"`
-	Price   float64  `bson:"price"`
+	Price   int      `bson:"price"`
 	Games   []Game   `bson:"games"`
 	Devices []Device `bson:"devices"`
 }
@@ -39,11 +39,19 @@ type AjaxDeleteElementTariff struct {
 	Name string `json:"name"`
 }
 
-type AdminFormData struct {
+type AdminFormTariffData struct {
 	Validation string
 	IdTariff   string
 	Action     string
 	Name       string
 	Genre      string
 	Platform   string
+}
+
+type AdminFormTariff struct {
+	Validation string
+	IdTariff   string
+	Action     string
+	Name       string
+	Price      int
 }

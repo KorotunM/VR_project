@@ -22,4 +22,7 @@ func HandlerPages() {
 	http.HandleFunc("/admin/tariff/add/device", AddDevicePage)
 	http.HandleFunc("/admin/tariff/edit/game", EditGamePage)
 	http.HandleFunc("/admin/tariff/edit/device", EditDevicePage)
+	http.HandleFunc("/admin/tariff/add", AddTariffPage)
+	http.HandleFunc("/admin/tariff/edit", EditTariffPage)
+	http.HandleFunc("/admin/tariff/delete", services.DeleteTariff)
 }

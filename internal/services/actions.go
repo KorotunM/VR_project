@@ -25,7 +25,7 @@ func AddGame(w http.ResponseWriter, r *http.Request) (string, error) {
 	tariffId, err = database.AddGameDB(r)
 	if err != nil {
 		if err.Error() == "game with this name already exists" {
-			return "Такая игра уже есть", nil
+			return "Такая игра уже существует", nil
 		}
 		return "", fmt.Errorf("error adding game in tariff: %v", err)
 	}
@@ -40,6 +40,9 @@ func EditGame(w http.ResponseWriter, r *http.Request) (string, error) {
 	)
 	tariffId, err = database.EditGameDB(r)
 	if err != nil {
+		if err.Error() == "game with this name already exists" {
+			return "Такая игра уже существует", nil
+		}
 		return "", fmt.Errorf("error editing game in tariff: %v", err)
 	}
 	http.Redirect(w, r, "/admin/tariff?id="+tariffId, http.StatusSeeOther)
@@ -54,7 +57,7 @@ func AddDevice(w http.ResponseWriter, r *http.Request) (string, error) {
 	tariffId, err = database.AddDeviceDB(r)
 	if err != nil {
 		if err.Error() == "device with this name already exists" {
-			return "Такое устройство уже есть", nil
+			return "Такое устройство уже существует", nil
 		}
 		return "", fmt.Errorf("error adding device in tariff: %v", err)
 	}
@@ -69,8 +72,64 @@ func EditDevice(w http.ResponseWriter, r *http.Request) (string, error) {
 	)
 	tariffId, err = database.EditDeviceDB(r)
 	if err != nil {
+		if err.Error() == "device with this name already exists" {
+			return "Такое устройство уже существует", nil
+		}
 		return "", fmt.Errorf("error editing device in tariff: %v", err)
 	}
 	http.Redirect(w, r, "/admin/tariff?id="+tariffId, http.StatusSeeOther)
 	return "", nil
+}
+
+func AddTariff(w http.ResponseWriter, r *http.Request) (string, error) {
+	var (
+		err error
+	)
+	_, err = database.AddTariffDB(r)
+	if err != nil {
+		if err.Error() == "tariff with this name already exists" {
+			return "Тариф с таким названием уже существует", nil
+		} else if err.Error() == "wrong price" {
+			return "Неправильная цена", nil
+		}
+		return "", fmt.Errorf("error adding tariff: %v", err)
+	}
+	http.Redirect(w, r, "/admin", http.StatusSeeOther)
+	return "", nil
+}
+
+func EditTariff(w http.ResponseWriter, r *http.Request) (string, error) {
+	tariffId, err := database.EditTariffDB(r)
+	if err != nil {
+		if err.Error() == "tariff with this name already exists" {
+			return "Тариф с таким именем уже существует", nil
+		}
+		return "", fmt.Errorf("error editing tariff: %v", err)
+	}
+	http.Redirect(w, r, "/admin/tariff?id="+tariffId, http.StatusSeeOther)
+	return "", nil
+}
+
+func DeleteTariff(w http.ResponseWriter, r *http.Request) {
+	var (
+		tariffId string
+		err      error
+	)
+
+	// Получаем ID тарифа из URL
+	tariffId = r.URL.Query().Get("id")
+	if tariffId == "" {
+		fmt.Fprintf(w, "Error: missing tariff ID")
+		return
+	}
+
+	// Вызываем функцию удаления тарифа из базы данных
+	err = database.DeleteTariffDB(tariffId)
+	if err != nil {
+		fmt.Fprintf(w, "Error deleting tariff: %v", err)
+		return
+	}
+
+	// Редирект на главную страницу админки
+	http.Redirect(w, r, "/admin", http.StatusSeeOther)
 }

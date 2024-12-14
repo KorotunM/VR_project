@@ -18,7 +18,8 @@ form label {
 }
 
 /* Поля ввода */
-form input[type="text"] {
+form input[type="text"],
+form input[type="number"] {
     width: 96%;
     padding: 2%;
     margin-bottom: 20px;
@@ -29,7 +30,8 @@ form input[type="text"] {
     font-size: 16px;
 }
 
-form input[type="text"]:focus {
+form input[type="text"]:focus,
+form input[type="number"]:focus {
     outline: none;
     border-color: #3a3af0;
 }
@@ -58,6 +60,6 @@ form button:hover {
 .validation-text {
     color: #ff6b6b;
     font-size: 16px;
-    margin-bottom: 10px;
+    margin: 0;
     text-align: center;
 }

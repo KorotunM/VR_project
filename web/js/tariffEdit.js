@@ -55,10 +55,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (selectedType === "game") {
             const genre = cells[1]?.textContent.trim(); // Жанр
-            editUrl = `http://localhost:8080/admin/tariff/edit/game?id=${encodeURIComponent(tariffId)}&name=${encodeURIComponent(name)}&genre=${encodeURIComponent(genre)}`;
+            editUrl = `/admin/tariff/edit/game?id=${encodeURIComponent(tariffId)}&name=${encodeURIComponent(name)}&genre=${encodeURIComponent(genre)}`;
         } else if (selectedType === "device") {
             const platform = cells[1]?.textContent.trim(); // Платформа
-            editUrl = `http://localhost:8080/admin/tariff/edit/device?id=${encodeURIComponent(tariffId)}&name=${encodeURIComponent(name)}&platform=${encodeURIComponent(platform)}`;
+            editUrl = `/admin/tariff/edit/device?id=${encodeURIComponent(tariffId)}&name=${encodeURIComponent(name)}&platform=${encodeURIComponent(platform)}`;
         }
 
         // Переход на страницу редактирования

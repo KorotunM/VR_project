@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -41,22 +42,27 @@ func EditGameDB(r *http.Request) (string, error) {
 	db := MongoClient.Database("Vr")
 	collection := db.Collection("Tariffs")
 
-	// Проверяем, существует ли игра с таким же названием в тарифе
-	filter := bson.M{
+	// Проверяем, не существует ли уже новая игра с таким же названием
+	newGameFilter := bson.M{
 		"_id": objectTariffId,
 		"games": bson.M{
 			"$elemMatch": bson.M{
-				"name":  gameName,  // Ищем игру по старому имени
-				"genre": gameGenre, // и старому жанру
+				"name": game.Name, // Проверка нового названия
 			},
 		},
 	}
-	count, err := collection.CountDocuments(context.TODO(), filter)
+	newGameCount, err := collection.CountDocuments(context.TODO(), newGameFilter)
 	if err != nil {
-		return "", fmt.Errorf("error checking existing game: %v", err)
+		return "", fmt.Errorf("error checking if new game name exists: %v", err)
 	}
-	if count == 0 {
-		return "", fmt.Errorf("game not found")
+	if game.Name == gameName {
+		if newGameCount != 1 {
+			return "", fmt.Errorf("game with this name already exists or another error")
+		}
+	} else {
+		if newGameCount > 0 {
+			return "", fmt.Errorf("game with this name already exists")
+		}
 	}
 
 	// Обновляем запись игры
@@ -112,22 +118,27 @@ func EditDeviceDB(r *http.Request) (string, error) {
 	db := MongoClient.Database("Vr")
 	collection := db.Collection("Tariffs")
 
-	// Проверяем, существует ли устройство с таким же названием в тарифе
-	filter := bson.M{
+	// Проверяем, не существует ли уже новое устройство с таким же названием
+	newDeviceFilter := bson.M{
 		"_id": objectTariffId,
 		"devices": bson.M{
 			"$elemMatch": bson.M{
-				"name":     deviceName,     // Ищем устройство по старому имени
-				"platform": devicePlatform, // и старой платформе
+				"name": device.Name, // Проверка нового названия
 			},
 		},
 	}
-	count, err := collection.CountDocuments(context.TODO(), filter)
+	newDeviceCount, err := collection.CountDocuments(context.TODO(), newDeviceFilter)
 	if err != nil {
-		return "", fmt.Errorf("error checking existing device: %v", err)
+		return "", fmt.Errorf("error checking if new device name exists: %v", err)
 	}
-	if count == 0 {
-		return "", fmt.Errorf("device not found")
+	if device.Name == deviceName {
+		if newDeviceCount != 1 {
+			return "", fmt.Errorf("device with this name already exists or another error")
+		}
+	} else {
+		if newDeviceCount > 0 {
+			return "", fmt.Errorf("device with this name already exists")
+		}
 	}
 
 	// Обновляем запись устройства
@@ -148,5 +159,66 @@ func EditDeviceDB(r *http.Request) (string, error) {
 	}
 
 	// Возвращаем tariffId для редиректа
+	return tariffId, nil
+}
+
+func EditTariffDB(r *http.Request) (string, error) {
+	var (
+		tariffId, name string
+		objectTariffId primitive.ObjectID
+		err            error
+		price          int
+	)
+
+	tariffId = r.URL.Query().Get("id")
+	name = r.FormValue("name")
+	price, err = strconv.Atoi(r.FormValue("price"))
+
+	if tariffId == "" || name == "" {
+		return "", fmt.Errorf("missing required string parameters from URL")
+	}
+	if err != nil {
+		return "", fmt.Errorf("missing price parameters from URL: %v", err)
+	}
+
+	// Конвертация tariffId в ObjectID
+	objectTariffId, err = primitive.ObjectIDFromHex(tariffId)
+	if err != nil {
+		return "", fmt.Errorf("error converting tariff ID to ObjectID: %v", err)
+	}
+
+	// Проверка существования тарифа с таким именем
+	db := MongoClient.Database("Vr")
+	collection := db.Collection("Tariffs")
+
+	filter := bson.M{
+		"_id":  bson.M{"$ne": objectTariffId}, // Исключить текущий тариф
+		"name": name,                          // Проверить по имени
+	}
+	count, err := collection.CountDocuments(context.TODO(), filter)
+	if err != nil {
+		return "", fmt.Errorf("error checking if tariff name exists: %v", err)
+	}
+	if count > 0 {
+		return "", fmt.Errorf("tariff with this name already exists")
+	}
+
+	// Обновление данных тарифа
+	update := bson.M{
+		"$set": bson.M{
+			"name":  name,
+			"price": price,
+		},
+	}
+
+	_, err = collection.UpdateOne(
+		context.TODO(),
+		bson.M{"_id": objectTariffId},
+		update,
+	)
+	if err != nil {
+		return "", fmt.Errorf("error updating tariff: %v", err)
+	}
+
 	return tariffId, nil
 }

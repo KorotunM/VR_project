@@ -6,7 +6,7 @@
   "price": 3000,
   "games": [
     {
-      "name": "Bioshock",
+      "name": "Dota 2",
       "genre": "Шутер"
     },
     {
@@ -14,8 +14,8 @@
       "genre": "Стратегия"
     },
     {
-      "name": "Dota 2",
-      "genre": "Tower defence"
+      "name": "Terraria",
+      "genre": "Песочница"
     }
   ],
   "devices": [
@@ -26,6 +26,10 @@
     {
       "name": "Компьютер 2",
       "platform": "PC"
+    },
+    {
+      "name": "Мой ноут",
+      "platform": "Рабочая лошадка"
     }
   ]
 },
@@ -34,23 +38,15 @@
     "$oid": "675bf08ca58d1368932c8973"
   },
   "name": "Плюс",
-  "price": 5000,
+  "price": 6000,
   "games": [
     {
       "name": "Bioshock",
       "genre": "Шутер"
     },
     {
-      "name": "Darkest dungeon",
+      "name": "Frostpunk",
       "genre": "Стратегия"
-    },
-    {
-      "name": "Dota 2",
-      "genre": "Tower defence"
-    },
-    {
-      "name": "Subnautica",
-      "genre": "Выживание"
     }
   ],
   "devices": [
@@ -94,6 +90,10 @@
     {
       "name": "Dredge",
       "genre": "Приключение"
+    },
+    {
+      "name": "Terraria",
+      "genre": "Песочница"
     }
   ],
   "devices": [

@@ -6,13 +6,13 @@
     
     <link rel="stylesheet" href="../web/css/admin.css">
 
-    <title>Админская панель</title>
+    <title>Панель администратора</title>
 </head>
 <body>
     <div class="admin-container">
         <div class="sidebar">
             <ul>
-                <li><h2 class="sidebar-title">Панель управления</h2></li>
+                <li><h2 class="sidebar-title">Управление</h2></li>
                 <li><a class="sidebar-button" href="#clients">Клиенты</a></li>
                 <li><a class="sidebar-button" href="#tariffs">Тарифы</a></li>
                 <li><a class="sidebar-button" href="#bookings">Документ с бронированиями</a></li>
@@ -22,7 +22,7 @@
             <a class="sidebar-back-button" href="/">Выйти</a>
         </div>
             <header class="header-container">
-                <h1>Админская панель</h1>
+                <h1>Панель администратора</h1>
             </header>
         <main>
             <section id="clients">
@@ -51,6 +51,7 @@
                 {{range .Tariffs}}
                     <a class="tariff-button" href="/admin/tariff?id={{.Id}}">{{.Name}}</a>
                 {{end}}
+                <a class="tariff-button-add" href="/admin/tariff/add">Добавить тариф</a>
             </section>
             <section id="bookings">
                 <h2>Документ с бронированиями</h2>
