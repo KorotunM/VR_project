@@ -1,6 +1,9 @@
 package interfaces
 
-import "net/http"
+import (
+	"VR_project/internal/services"
+	"net/http"
+)
 
 func HandlerStatic() {
 	// обработка css и js
@@ -14,5 +17,7 @@ func HandlerPages() {
 	http.HandleFunc("/", HomePage)
 	http.HandleFunc("/admin", AdminPage)
 	http.HandleFunc("/admin/tariff", TariffPage)
-	http.HandleFunc("/admin/tariff/delete/element", DeleteElementTariff)
+	http.HandleFunc("/admin/tariff/delete/element", services.DeleteElementTariff)
+	http.HandleFunc("/admin/tariff/add/game", AddGamePage)
+	http.HandleFunc("/admin/tariff/add/device", AddDevicePage)
 }

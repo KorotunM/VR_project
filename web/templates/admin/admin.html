@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,17 +30,17 @@
                 <table>
                     <thead>
                         <tr class="table-header">
-                            <th>ФИО</th>
-                            <th>Телефон</th>
-                            <th>Email</th>
+                            <th class="table-body-cell">ФИО</th>
+                            <th class="table-body-cell">Телефон</th>
+                            <th class="table-body-cell">Email</th>
                         </tr>
                     </thead>
                     <tbody>
                         {{range .Clients}}
                         <tr class="table-body">
-                            <td>{{.Name}}</td>
-                            <td>{{.Phone}}</td>
-                            <td>{{.Email}}</td>
+                            <td class="table-body-cell">{{.Name}}</td>
+                            <td class="table-body-cell">{{.Phone}}</td>
+                            <td class="table-body-cell">{{.Email}}</td>
                         </tr>
                         {{end}}
                     </tbody>
@@ -57,10 +57,10 @@
                 <table>
                     <thead>
                         <tr class="table-header">
-                            <th>ФИО</th>
-                            <th>Дата бронирования</th>
-                            <th>Время</th>
-                            <th>Количество человек</th>
+                            <th class="table-body-cell">ФИО</th>
+                            <th class="table-body-cell">Дата бронирования</th>
+                            <th class="table-body-cell">Время</th>
+                            <th class="table-body-cell">Количество человек</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -73,8 +73,8 @@
                 <table>
                     <thead>
                         <tr class="table-header">
-                            <th>Тариф</th>
-                            <th>Количество использований</th>
+                            <th class="table-body-cell">Тариф</th>
+                            <th class="table-body-cell">Количество использований</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -87,8 +87,8 @@
                 <table>
                     <thead>
                         <tr class="table-header">
-                            <th>Дата</th>
-                            <th>Количество броней</th>
+                            <th class="table-body-cell">Дата</th>
+                            <th class="table-body-cell">Количество броней</th>
                         </tr>
                     </thead>
                     <tbody>

@@ -15,6 +15,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     rows.forEach(row => {
         row.addEventListener("click", function () {
+            // Проверяем, что клик не был по строке с кнопкой "Добавить"
+            if (row.classList.contains("add-row")) {
+                return; // Прерываем обработку, если клик был по строке с кнопкой
+            }
             // Определяем таблицу, из которой строка (игры или устройства)
             const parentTable = row.closest("section").id;
             selectedType = parentTable === "games" ? "game" : "device";

@@ -20,11 +20,11 @@ func DeleteElementTariffDB(r *http.Request) error {
 		err            error
 	)
 	if r.Method != http.MethodPost {
-		return fmt.Errorf("error method: %v", err)
+		return fmt.Errorf("error method")
 	}
 	tariffId = r.URL.Query().Get("id")
 	if tariffId == "" {
-		return fmt.Errorf("error getting id tariff from URL: %v", err)
+		return fmt.Errorf("error getting id tariff from URL")
 	}
 	// Конвертация string в ObjectID
 	objectTariffId, err = primitive.ObjectIDFromHex(tariffId)

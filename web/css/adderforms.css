@@ -1,0 +1,64 @@
+/* Общие стили для формы */
+form {
+    background-color: #2d2b55;
+    padding: 2%;
+    border-radius: 5px;
+    width: 70%;
+    margin: 20px auto;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+}
+
+/* Стили для меток */
+form label {
+    display: block;
+    margin-bottom: 8px;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+/* Поля ввода */
+form input[type="text"] {
+    width: 96%;
+    padding: 2%;
+    margin-bottom: 20px;
+    border: 1px solid #3b3f5e;
+    background-color: #1e1e3f;
+    color: #ffffff;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+form input[type="text"]:focus {
+    outline: none;
+    border-color: #3a3af0;
+}
+
+/* Обёртка для центрирования кнопки */
+form .button-container {
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* Кнопка */
+form button {
+    width: 30%;
+    background-color: #19199a; /* Голубая кнопка */
+    color: #ffffff;
+    border: none;
+    padding: 2% 4%;
+    cursor: pointer;
+    font-size: 18px;
+    border-radius: 5px;
+}
+
+form button:hover {
+    background-color: #1f1fab;
+}
+
+.validation-text {
+    color: #ff6b6b;
+    font-size: 16px;
+    margin-bottom: 10px;
+    text-align: center;
+}

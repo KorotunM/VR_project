@@ -133,7 +133,7 @@ table {
     margin-bottom: 20px;
 }
 
-table th, table td {
+.table-body-cell {
     border: 1px solid #fff;
     padding: 10px;
     text-align: left;
@@ -157,5 +157,25 @@ table th, table td {
 }
 .selected:hover {
     background-color: #19199a;
+}
+
+/* кнопка в конце таблицы */
+
+.table-body-button {
+    border: 1px solid #fff;
+}
+
+.button {
+    display: block;
+    text-align: center;
+    padding: 10px;
+    background-color: #242443;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.button:hover {
+    background-color: #2c2c51;
 }
 /*  */

@@ -2,7 +2,7 @@ package interfaces
 
 import (
 	"VR_project/database"
-	"encoding/json"
+	"VR_project/internal/services"
 	"fmt"
 	"html/template"
 	"net/http"
@@ -33,7 +33,7 @@ func AdminPage(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Error receiving tariffs: %v", err)
 		return
 	}
-	tmp, err := template.ParseFiles("../web/templates/admin.html")
+	tmp, err := template.ParseFiles("../web/templates/admin/admin.html")
 	if err != nil {
 		fmt.Fprintf(w, "Error loading template: %v", err)
 		return
@@ -57,7 +57,7 @@ func TariffPage(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Error getting the tariff: %v", err)
 		return
 	}
-	tmpl, err := template.ParseFiles("../web/templates/tariff.html")
+	tmpl, err := template.ParseFiles("../web/templates/admin/tariff.html")
 	if err != nil {
 		fmt.Fprintf(w, "Error loading template: %v", err)
 		return
@@ -70,12 +70,66 @@ func TariffPage(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func DeleteElementTariff(w http.ResponseWriter, r *http.Request) {
-	var err error = database.DeleteElementTariffDB(r)
-	if err != nil {
-		fmt.Fprintf(w, "Error deleting element tariff: %v", err)
+func AddGamePage(w http.ResponseWriter, r *http.Request) {
+	var (
+		answer               database.Validation
+		validation, tariffId string
+		err                  error
+	)
+	tariffId = r.URL.Query().Get("id")
+	if tariffId == "" {
+		fmt.Fprintf(w, "Error getting id tariff from URL")
 		return
 	}
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]string{"success": "true"})
+	answer.IdTariff = tariffId
+	if r.Method == http.MethodPost {
+		validation, err = services.AddGame(w, r)
+		if err != nil {
+			fmt.Fprintf(w, "Error adding game: %v", err)
+			return
+		}
+		answer.Error = validation
+	}
+	tmp, err := template.ParseFiles("../web/templates/admin/addGame.html")
+	if err != nil {
+		fmt.Fprintf(w, "Error loading template: %v", err)
+		return
+	}
+	err = tmp.Execute(w, answer)
+	if err != nil {
+		fmt.Fprintf(w, "Error rendering template: %v", err)
+		return
+	}
+}
+
+func AddDevicePage(w http.ResponseWriter, r *http.Request) {
+	var (
+		answer               database.Validation
+		validation, tariffId string
+		err                  error
+	)
+	tariffId = r.URL.Query().Get("id")
+	if tariffId == "" {
+		fmt.Fprintf(w, "Error getting id tariff from URL")
+		return
+	}
+	answer.IdTariff = tariffId
+	if r.Method == http.MethodPost {
+		validation, err = services.AddDevice(w, r)
+		if err != nil {
+			fmt.Fprintf(w, "Error adding device: %v", err)
+			return
+		}
+		answer.Error = validation
+	}
+	tmp, err := template.ParseFiles("../web/templates/admin/addDevice.html")
+	if err != nil {
+		fmt.Fprintf(w, "Error loading template: %v", err)
+		return
+	}
+	err = tmp.Execute(w, answer)
+	if err != nil {
+		fmt.Fprintf(w, "Error rendering template: %v", err)
+		return
+	}
 }

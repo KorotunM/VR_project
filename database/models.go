@@ -7,7 +7,7 @@ type AdminPageData struct {
 
 type Client struct {
 	Name  string `bson:"name"`
-	Phone string `bson:"phone_number"`
+	Phone string `bson:"phone number"`
 	Email string `bson:"email"`
 }
 
@@ -17,7 +17,7 @@ type TariffTitle struct {
 }
 
 type Tariff struct {
-	ID      string   `bson:"_id"`
+	Id      string   `bson:"_id"`
 	Name    string   `bson:"name"`
 	Price   float64  `bson:"price"`
 	Games   []Game   `bson:"games"`
@@ -37,4 +37,9 @@ type Device struct {
 type AjaxDeleteElementTariff struct {
 	Type string `json:"type"`
 	Name string `json:"name"`
+}
+
+type Validation struct {
+	Error    string
+	IdTariff string
 }

@@ -34,17 +34,22 @@
                 <table>
                     <thead>
                         <tr class="table-header">
-                            <th>Название</th>
-                            <th>Жанр</th>
+                            <th class="table-body-cell">Название</th>
+                            <th class="table-body-cell">Жанр</th>
                         </tr>
                     </thead>
                     <tbody>
                         {{range .Games}}
                         <tr class="table-body">
-                            <td>{{.Name}}</td>
-                            <td>{{.Genre}}</td>
+                            <td class="table-body-cell">{{.Name}}</td>
+                            <td class="table-body-cell">{{.Genre}}</td>
                         </tr>
                         {{end}}
+                        <tr class="add-row">
+                            <td class="table-body-button" colspan="2">
+                                <a href="/admin/tariff/add/game?id={{.Id}}" class="button">Добавить игру</a>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </section>
@@ -53,17 +58,22 @@
                 <table>
                     <thead>
                         <tr class="table-header">
-                            <th>Название</th>
-                            <th>Платформа</th>
+                            <th class="table-body-cell">Название</th>
+                            <th class="table-body-cell">Платформа</th>
                         </tr>
                     </thead>
                     <tbody>
                         {{range .Devices}}
                         <tr class="table-body">
-                            <td>{{.Name}}</td>
-                            <td>{{.Platform}}</td>
+                            <td class="table-body-cell">{{.Name}}</td>
+                            <td class="table-body-cell">{{.Platform}}</td>
                         </tr>
                         {{end}}
+                        <tr class="add-row">
+                            <td class="table-body-button" colspan="2">
+                                <a href="/admin/tariff/add/device?id={{.Id}}" class="button">Добавить устройство</a>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </section>

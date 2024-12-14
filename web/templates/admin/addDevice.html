@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../../../web/css/admin.css">
+    <link rel="stylesheet" href="../../../web/css/adderforms.css">
+
+    <title>Добавить устройство</title>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="sidebar">
+            <ul class="sidebar-button-container">
+                <li><h2 class="sidebar-title">Панель управления</h2></li>
+            </ul>
+            <div class="sidebar-buttons">
+            </div>
+            <a class="sidebar-back-button" href="/admin/tariff?id={{.IdTariff}}">Отмена</a>
+        </div>
+        <header class="header-container">
+            <h1>Добавить устройство</h1>
+        </header>
+        <main>
+            {{if .Error}}
+            <p class="validation-text">{{.Error}}</p>
+            {{end}}
+            <form action="#" method="POST">
+                <label for="name">Название:</label>
+                <input type="text" id="name" name="name" required />
+                <label for="genre">Платформа:</label>
+                <input type="text" id="platform" name="platform" required />
+                <div class="button-container">
+                    <button type="submit">Добавить</button>
+                </div>
+            </form>
+        </main>
+    </div>
+</body>
+</html>
