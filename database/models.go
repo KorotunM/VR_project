@@ -63,13 +63,6 @@ type AdminFormTariff struct {
 	Price      int
 }
 
-type AdminFormClient struct {
-	Action string
-	Name   string
-	Phone  string
-	Email  string
-}
-
 type BookingDocument struct {
 	ID          primitive.ObjectID `bson:"_id,omitempty" json:"id"`          // ID документа (генерируется MongoDB)
 	ClientID    primitive.ObjectID `bson:"client_id" json:"client_id"`       // ID клиента (ссылка на другой документ)
