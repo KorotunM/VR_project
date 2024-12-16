@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VR Club</title>
+    <link rel="stylesheet" href="../web/css/styles.css">
+    <script src="../web/js/slider.js" defer></script> <!-- Подключаем JS -->
+</head>
+<body>
+    <!-- Шапка -->
+    <header>
+        <div class="logo">
+            <img src="../assets/logo.jpg" alt="VR Club Logo">
+        </div>
+        <div class="title">
+            <h1>Очень крутое название клуба</h1>
+        </div>
+
+        <div class="admin-login">
+            <form enctype="multipart/form-data" method="post" action="/admin">
+                <button type="submit">Вход для администратора</button>
+            </form>
+        </div>
+
+    </header>
+
+    <!-- Основная часть -->
+    <main>
+        <!-- Слайдер тарифов -->
+        <section class="tariff-slider">
+            <h2>Наши тарифы</h2>
+            <div class="slider-wrapper">
+                <button class="slider-btn prev">&lt;</button>
+                <div class="slider-container">
+                    {{ range .Tariffs }}
+                    <div class="tariff-card">
+                        <div class="tariff-header">
+                            <h3>{{ .Name }}</h3>
+                            <p class="tariff-price">{{ .Price }} руб.</p>
+                        </div>
+                        <ul class="tariff-features">
+                            <li><strong>Игры:</strong></li>
+                            {{ range .Games }}
+                            <li>{{ .Name }} ({{ .Genre }})</li>
+                            {{ end }}
+                            <li><strong>Устройства:</strong></li>
+                            {{ range .Devices }}
+                            <li>{{ .Name }} ({{ .Platform }})</li>
+                            {{ end }}
+                        </ul>
+                        <button class="tariff-button" onclick="scrollToBooking()">Забронировать сейчас</button>
+                    </div>
+                    {{ end }}
+                </div>
+                <button class="slider-btn next">&gt;</button>
+            </div>
+        </section>
+    
+        <!-- Форма бронирования -->
+        <div class="booking-form">
+            <h2>Забронировать сеанс</h2>
+            <form>
+                <label for="tariff-select">Тариф:</label>
+                <select id="tariff-select" name="tariff">
+                    {{ range .Tariffs }}
+                    <option value="{{ .Name }}">{{ .Name }} - {{ .Price }} руб.</option>
+                    {{ end }}
+                </select>
+    
+                <label for="name">ФИО:</label>
+                <input type="text" id="name" name="name" required>
+    
+                <label for="phone">Телефон:</label>
+                <input type="tel" id="phone" name="phone" required>
+    
+                <label for="date">Дата:</label>
+                <input type="date" id="date" name="date" required>
+    
+                <label for="booking-time">Время брони:</label>
+                <select id="booking-time" name="booking-time">
+                    <option value="8:00">8:00</option>
+                    <option value="9:00">9:00</option>
+                    <option value="10:00">10:00</option>
+                </select>
+    
+                <div class="rules">
+                    <input type="checkbox" id="rules" name="rules" required>
+                    <label for="rules">Я ознакомлен с <a href="#">правилами клуба</a></label>
+                </div>
+    
+                <button type="submit">Забронировать</button>
+            </form>
+        </div>
+    </main>
+    
+
+    <!-- Футер -->
+    <footer>
+        <div class="contacts">
+            <p>📞 Телефон: +7 (999) 123-45-67</p>
+            <p>📬 Email: info@vrclub.ru</p>
+        </div>
+        <div class="address">
+            <p>📍 Адрес: ул. Примерная, 1</p>
+        </div>
+    </footer>
+</body>
+</html>

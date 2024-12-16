@@ -7,6 +7,7 @@ import (
 	"VR_project/internal/interfaces"
 )
 
+//localhost:8080
 func main() {
 	// Инициализация MongoDB
 	database.InitMongoDB("mongodb://localhost:27017")

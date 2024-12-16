@@ -9,18 +9,18 @@ import (
 	"strconv"
 )
 
-func HomePage(w http.ResponseWriter, r *http.Request) {
-	tmp, err := template.ParseFiles("../web/templates/index.html")
-	if err != nil {
-		fmt.Fprintf(w, "Error loading template: %v", err)
-		return
-	}
-	err = tmp.Execute(w, nil)
-	if err != nil {
-		fmt.Fprintf(w, "Error rendering template: %v", err)
-		return
-	}
-}
+// func HomePage(w http.ResponseWriter, r *http.Request) {
+// 	tmp, err := template.ParseFiles("../web/templates/index.html")
+// 	if err != nil {
+// 		fmt.Fprintf(w, "Error loading template: %v", err)
+// 		return
+// 	}
+// 	err = tmp.Execute(w, nil)
+// 	if err != nil {
+// 		fmt.Fprintf(w, "Error rendering template: %v", err)
+// 		return
+// 	}
+// }
 
 func AdminPage(w http.ResponseWriter, r *http.Request) {
 	var adminPageData database.AdminPageData
