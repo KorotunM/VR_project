@@ -6,6 +6,7 @@ type AdminPageData struct {
 }
 
 type Client struct {
+	Id    string `bson:"_id,omitempty"`
 	Name  string `bson:"name"`
 	Phone string `bson:"phone number"`
 	Email string `bson:"email"`
@@ -54,4 +55,11 @@ type AdminFormTariff struct {
 	Action     string
 	Name       string
 	Price      int
+}
+
+type AdminFormClient struct {
+	Action string
+	Name   string
+	Phone  string
+	Email  string
 }

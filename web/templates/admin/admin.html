@@ -6,6 +6,8 @@
     
     <link rel="stylesheet" href="../web/css/admin.css">
 
+    <script defer src="../web/js/clientDelete.js"></script>
+
     <title>Панель администратора</title>
 </head>
 <body>
@@ -19,6 +21,10 @@
                 <li><a class="sidebar-button" href="#tariff-stats">Документ с статистикой по тарифам</a></li>
                 <li><a class="sidebar-button" href="#booking-stats">Документ с статистикой по броням</a></li>
             </ul>
+            <div class="sidebar-buttons">
+                <a id="edit-button" class="sidebar-action-button disabled" href="#">Изменить запись</a>
+                <a id="delete-button" class="sidebar-action-button disabled" href="#">Удалить запись</a>
+            </div>
             <a class="sidebar-back-button" href="/">Выйти</a>
         </div>
             <header class="header-container">
@@ -38,11 +44,17 @@
                     <tbody>
                         {{range .Clients}}
                         <tr class="table-body">
+                            <td class="table-body-cell hidden-id">{{.Id}}</td>
                             <td class="table-body-cell">{{.Name}}</td>
                             <td class="table-body-cell">{{.Phone}}</td>
                             <td class="table-body-cell">{{.Email}}</td>
                         </tr>
                         {{end}}
+                        <tr class="add-row">
+                            <td class="table-body-button" colspan="3">
+                                <a href="/admin/client/add" class="button">Добавить клиента</a>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </section>

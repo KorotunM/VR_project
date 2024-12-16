@@ -19,9 +19,6 @@ func DeleteElementTariffDB(r *http.Request) error {
 		update         bson.M
 		err            error
 	)
-	if r.Method != http.MethodPost {
-		return fmt.Errorf("error method")
-	}
 	tariffId = r.URL.Query().Get("id")
 	if tariffId == "" {
 		return fmt.Errorf("error getting id tariff from URL")
@@ -83,5 +80,26 @@ func DeleteTariffDB(tariffId string) error {
 		return fmt.Errorf("error deleting tariff: %v", err)
 	}
 
+	return nil
+}
+
+func DeleteClientDB(r *http.Request) error {
+	id := r.URL.Query().Get("id")
+	if id == "" {
+		return fmt.Errorf("missing client ID")
+	}
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return fmt.Errorf("invalid client ID: %v", err)
+	}
+
+	db := MongoClient.Database("Vr")
+	collection := db.Collection("Clients")
+
+	filter := bson.M{"_id": objectId}
+	_, err = collection.DeleteOne(context.TODO(), filter)
+	if err != nil {
+		return fmt.Errorf("error deleting client from database: %v", err)
+	}
 	return nil
 }

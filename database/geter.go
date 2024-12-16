@@ -19,20 +19,20 @@ func GetClients() ([]Client, error) {
 
 	// Работа с коллекцией
 	db := MongoClient.Database("Vr")
-	collection := db.Collection("Users")
+	collection := db.Collection("Clients")
 
 	// Поиск всех документов
 	filter := bson.M{} // Пустой фильтр для получения всех документов
 	cursor, err := collection.Find(ctx, filter)
 	if err != nil {
-		return nil, fmt.Errorf("error search users: %v", err)
+		return nil, fmt.Errorf("error search clients: %v", err)
 	}
 	defer cursor.Close(ctx)
 
 	// Считывание результатов
 	var clients []Client
 	if err := cursor.All(ctx, &clients); err != nil {
-		return nil, fmt.Errorf("error users reading: %v", err)
+		return nil, fmt.Errorf("error clients reading: %v", err)
 	}
 
 	return clients, nil

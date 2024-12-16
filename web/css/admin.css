@@ -161,6 +161,10 @@ table {
     cursor: pointer;
 }
 
+.hidden-id {
+    display: none;
+}
+
 /* Выбранная строка таблицы */
 .selected {
     background-color: #19199a;

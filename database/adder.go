@@ -109,7 +109,7 @@ func AddDeviceDB(r *http.Request) (string, error) {
 	return tariffId, nil
 }
 
-func AddTariffDB(r *http.Request) (string, error) {
+func AddTariffDB(r *http.Request) error {
 	var (
 		tariff Tariff
 		name   string
@@ -120,15 +120,15 @@ func AddTariffDB(r *http.Request) (string, error) {
 	name = r.FormValue("name")
 	price, err := strconv.Atoi(r.FormValue("price"))
 	if err != nil {
-		return "", fmt.Errorf("error converting string to int")
+		return fmt.Errorf("error converting string to int")
 	}
 
 	// Проверяем, заполнены ли все поля
 	if name == "" {
-		return "", fmt.Errorf("error: name is required")
+		return fmt.Errorf("error: name is required")
 	}
 	if price <= 0 {
-		return "", fmt.Errorf("wrong price")
+		return fmt.Errorf("wrong price")
 	}
 
 	// Проверяем, существует ли тариф с таким названием
@@ -139,10 +139,10 @@ func AddTariffDB(r *http.Request) (string, error) {
 	filter := bson.M{"name": name}
 	count, err := collection.CountDocuments(context.TODO(), filter)
 	if err != nil {
-		return "", fmt.Errorf("error checking existing tariff: %v", err)
+		return fmt.Errorf("error checking existing tariff: %v", err)
 	}
 	if count > 0 {
-		return "", fmt.Errorf("tariff with this name already exists")
+		return fmt.Errorf("tariff with this name already exists")
 	}
 
 	// Создаем новый тариф
@@ -156,9 +156,8 @@ func AddTariffDB(r *http.Request) (string, error) {
 	// Вставляем тариф в базу данных
 	_, err = collection.InsertOne(context.TODO(), tariff)
 	if err != nil {
-		return "", fmt.Errorf("error adding new tariff: %v", err)
+		return fmt.Errorf("error adding new tariff: %v", err)
 	}
 
-	// Возвращаем ID тарифа
-	return tariff.Name, nil
+	return nil
 }

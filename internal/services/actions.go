@@ -8,6 +8,10 @@ import (
 )
 
 func DeleteElementTariff(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		fmt.Fprintf(w, "error method")
+		return
+	}
 	var err error = database.DeleteElementTariffDB(r)
 	if err != nil {
 		fmt.Fprintf(w, "Error deleting element tariff: %v", err)
@@ -82,10 +86,7 @@ func EditDevice(w http.ResponseWriter, r *http.Request) (string, error) {
 }
 
 func AddTariff(w http.ResponseWriter, r *http.Request) (string, error) {
-	var (
-		err error
-	)
-	_, err = database.AddTariffDB(r)
+	var err error = database.AddTariffDB(r)
 	if err != nil {
 		if err.Error() == "tariff with this name already exists" {
 			return "Тариф с таким названием уже существует", nil
@@ -131,5 +132,19 @@ func DeleteTariff(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Редирект на главную страницу админки
+	http.Redirect(w, r, "/admin", http.StatusSeeOther)
+}
+
+func DeleteClient(w http.ResponseWriter, r *http.Request) {
+	var err error
+	if r.Method != http.MethodGet {
+		fmt.Fprintf(w, "Invalid request method")
+		return
+	}
+	err = database.DeleteClientDB(r)
+	if err != nil {
+		fmt.Fprintf(w, "Error deleting client: %v", err)
+		return
+	}
 	http.Redirect(w, r, "/admin", http.StatusSeeOther)
 }
