@@ -4,4 +4,32 @@
   "tariff_id": "60e6f0b9c45e654321abcdef",
   "booking_date": "2024-06-11T00:00:00Z",
   "booking_time": "12:00"
+},
+{
+  "_id": "60e6f0b9c45e123456789def",
+  "client_id": "60e6f0b9c45eabcdef123457",
+  "tariff_id": "60e6f0b9c45e654321abcdee",
+  "booking_date": "2024-06-19T00:00:00Z",
+  "booking_time": "12:00"
+},
+{
+  "_id": "60e6f0b9c45e123456789df0",
+  "client_id": "60e6f0b9c45eabcdef123458",
+  "tariff_id": "60e6f0b9c45e654321abcdff",
+  "booking_date": "2024-06-19T00:00:00Z",
+  "booking_time": "14:00"
+},
+{
+  "_id": "60e6f0b9c45e123456789dec",
+  "client_id": "60e6f0b9c45eabcdef123459",
+  "tariff_id": "60e6f0b9c45e654321abcd00",
+  "booking_date": "2024-12-19T00:00:00Z",
+  "booking_time": "12:00"
+},
+{
+  "_id": "60e6f0b9c45e123456789ded",
+  "client_id": "60e6f0b9c45eabcdef123460",
+  "tariff_id": "60e6f0b9c45e654321abcd01",
+  "booking_date": "2024-12-19T00:00:00Z",
+  "booking_time": "14:00"
 }]

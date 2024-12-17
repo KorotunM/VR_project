@@ -74,15 +74,17 @@
                 <label for="phone">Телефон:</label>
                 <input type="tel" id="phone" name="phone" required>
     
-                <label for="date">Дата:</label>
-                <input type="date" id="date" name="date" required>
-    
-                <label for="booking-time">Время брони:</label>
-                <select id="booking-time" name="booking-time">
-                    <option value="8:00">8:00</option>
-                    <option value="9:00">9:00</option>
-                    <option value="10:00">10:00</option>
-                </select>
+                <label for="booking-date">Выберите дату:</label>
+<input type="date" id="booking-date" name="booking-date">
+
+<div id="available-times" style="display: none;">
+    <h3>Доступное время:</h3>
+    <div id="time-buttons"></div>
+    <button  type="button" id="cancel-selection">Отменить выбор</button>
+</div>
+
+<script src="../web/js/calendar.js" defer></script>
+
     
                 <div class="rules">
                     <input type="checkbox" id="rules" name="rules" required>

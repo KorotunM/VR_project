@@ -15,6 +15,7 @@ func HandlerStatic() {
 func HandlerPages() {
 	// Отображение страниц
 	http.HandleFunc("/", TariffHandler)
+	http.HandleFunc("/available-times", AvailableTimesHandler)
 	http.HandleFunc("/admin", AdminPage)
 	http.HandleFunc("/admin/tariff", TariffPage)
 	http.HandleFunc("/admin/tariff/delete/element", services.DeleteElementTariff)

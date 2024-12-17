@@ -315,3 +315,51 @@ main {
 .tariff-button:hover {
     background-color: #008CBA;
 }
+
+#available-times {
+    margin-top: 20px;
+}
+
+.time-button {
+    background-color: #00bfff;
+    color: #fff;
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+.time-button:hover {
+    background-color: #008cba;
+}
+
+.time-button.selected {
+    background-color: #008cba; /* Цвет выделенной кнопки */
+    font-weight: bold;
+}
+
+.time-button.dimmed {
+    opacity: 0.5; /* Прозрачность для невыбранных кнопок */
+    pointer-events: none; /* Отключаем взаимодействие */
+}
+
+#cancel-selection {
+    display: none; /* Скрываем кнопку отмены выбора по умолчанию */
+    margin-top: 10px;
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#cancel-selection:hover {
+    background-color: #ff1a1a;
+}
+#available-times {
+    display: none; /* Скрываем блок изначально */
+}
+

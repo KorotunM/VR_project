@@ -13,6 +13,9 @@ func main() {
 	database.InitMongoDB("mongodb://localhost:27017")
 	defer database.CloseMongoDB()
 
+	//Test
+	//database.PrintAllBookings()
+
 	interfaces.HandlerStatic()
 	interfaces.HandlerPages()
 	http.ListenAndServe(":8080", nil)
