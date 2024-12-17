@@ -251,9 +251,9 @@ func EditClientDB(r *http.Request) error {
 
 	update := bson.M{
 		"$set": bson.M{
-			"name":  name,
-			"email": email,
-			"phone": phone,
+			"name":         name,
+			"email":        email,
+			"phone number": phone,
 		},
 	}
 
