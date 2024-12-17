@@ -16,9 +16,11 @@ func GetBookedTimes(date time.Time) ([]string, error) {
 	collection := MongoClient.Database("Vr").Collection("Booking")
 
 	// Фильтр для поиска записей по дате
-	filterDate := date.Format("2006-01-02") + "T00:00:00Z"
-	log.Println(filterDate)
-	filter := bson.M{"booking_date": filterDate}
+	filter := bson.M{
+		"booking_date": date, // Передаём date как time.Time напрямую
+	}
+	log.Println("Фильтр для даты:", date)
+
 	cursor, err := collection.Find(ctx, filter)
 	if err != nil {
 		return nil, err
