@@ -48,6 +48,7 @@ func AdminPage(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
+
 	err = tmp.Execute(w, adminPageData)
 	if err != nil {
 		fmt.Fprintf(w, "Error rendering template: %v", err)
@@ -363,10 +364,11 @@ func EditClientPage(w http.ResponseWriter, r *http.Request) {
 
 func EditBookingPage(w http.ResponseWriter, r *http.Request) {
 	var (
-		answer                     database.AdminFormBooking
-		client, tariff, date, time string
-		err                        error
-		tariffs                    []database.TariffTitle
+		answer               database.AdminFormBooking
+		client, tariff, date string
+		time                 string
+		err                  error
+		tariffs              []database.TariffTitle
 	)
 
 	client = r.URL.Query().Get("client")
@@ -387,7 +389,7 @@ func EditBookingPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for i := range tariffs {
-		answer.Tariffs[i] = tariffs[i].Name
+		answer.Tariffs = append(answer.Tariffs, tariffs[i].Name)
 	}
 
 	answer.AvailableTimes = []string{"10:00", "12:00", "14:00", "16:00", "18:00", "20:00"}

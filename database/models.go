@@ -1,5 +1,7 @@
 package database
 
+import "time"
+
 type AdminPageData struct {
 	Clients  []Client
 	Tariffs  []TariffTitle
@@ -74,7 +76,8 @@ type BookingDocument struct {
 	ClientName  string
 	TariffID    string `bson:"tariff_id" json:"tariff_id"` // ID тарифа (ссылка на другой документ)
 	TariffName  string
-	BookingDate string `bson:"booking_date" json:"booking_date"` // Дата бронирования
+	BookingDate time.Time `bson:"booking_date" json:"booking_date"` // Дата бронирования
+	Date        string
 	BookingTime string `bson:"booking_time" json:"booking_time"` // Время бронирования
 }
 type BookingRequest struct {

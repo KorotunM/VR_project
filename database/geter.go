@@ -112,9 +112,10 @@ func GetAllBookings() ([]BookingDocument, error) {
 		return nil, fmt.Errorf("error bookings reading: %v", err)
 	}
 
-	// оставляем только год, месяц и день
+	// Преобразуем дату в нужный формат и сохраняем в поле Date
 	for index := range bookings {
-		bookings[index].BookingDate = bookings[index].BookingDate[:10]
+		// Заполняем Date как строку в нужном формате "гггг-мм-дд"
+		bookings[index].Date = bookings[index].BookingDate.Format("2006-01-02")
 	}
 
 	return bookings, nil

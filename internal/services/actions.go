@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 )
 
 func DeleteElementTariff(w http.ResponseWriter, r *http.Request) {
@@ -192,4 +193,8 @@ func EditBooking(w http.ResponseWriter, r *http.Request) error {
 	// Перенаправление пользователя на страницу с обновленным списком клиентов
 	http.Redirect(w, r, "/admin#bookings", http.StatusSeeOther)
 	return nil
+}
+
+func FormatDate(t time.Time, layout string) string {
+	return t.Format(layout)
 }
