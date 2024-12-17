@@ -1,38 +1,27 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const bookingForm = document.getElementById("booking-form");
-    const cancelSelectionButton = document.getElementById("cancel-selection");
+// ClearForm.js: функция для очистки формы и кнопок времени
+
+function clearFormAndButtons(bookingForm) {
     const timeButtonsContainer = document.getElementById("time-buttons");
+    const cancelSelectionButton = document.getElementById("cancel-selection");
 
-    let selectedTime = null;
+    // Очистка формы
+    if (bookingForm) {
+        bookingForm.reset();
+        console.log("Форма успешно очищена.");
+    }
 
-    // Функция для сброса кнопок времени
-    function clearTimeButtons() {
+    // Сброс выбранного времени
+    selectedTime = null;
+
+    // Очистка стилей кнопок времени
+    if (timeButtonsContainer) {
         document.querySelectorAll(".time-button").forEach(button => {
             button.classList.remove("selected", "dimmed");
         });
-        console.log("Кнопки времени сброшены.");
     }
 
-    // Функция для очистки формы
-    function clearForm() {
-        if (bookingForm) {
-            bookingForm.reset(); // Сбрасывает все поля формы
-            console.log("Форма сброшена.");
-        }
-
-        selectedTime = null; // Сбрасываем выбранное время
-
-        // Скрываем кнопку "Отменить выбор", если она есть
-        if (cancelSelectionButton) {
-            cancelSelectionButton.style.display = "none";
-        }
-
-        // Сбрасываем состояние кнопок времени
-        clearTimeButtons();
+    // Скрываем кнопку отмены выбора
+    if (cancelSelectionButton) {
+        cancelSelectionButton.style.display = "none";
     }
-
-    // Слушатель события для кнопки "Забронировать" (после успешной отправки)
-    document.addEventListener("formSubmitted", () => {
-        clearForm();
-    });
-});
+}
