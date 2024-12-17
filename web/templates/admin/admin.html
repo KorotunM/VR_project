@@ -18,7 +18,7 @@
                 <li><h2 class="sidebar-title">Управление</h2></li>
                 <li><a class="sidebar-button" href="#clients">Клиенты</a></li>
                 <li><a class="sidebar-button" href="#tariffs">Тарифы</a></li>
-                <li><a class="sidebar-button" href="#bookings">Документ с бронированиями</a></li>
+                <li><a class="sidebar-button" href="#bookings">Бронирования</a></li>
                 <li><a class="sidebar-button" href="#tariff-stats">Документ с статистикой по тарифам</a></li>
                 <li><a class="sidebar-button" href="#booking-stats">Документ с статистикой по броням</a></li>
             </ul>
@@ -67,17 +67,26 @@
                 <a class="tariff-button-add" href="/admin/tariff/add">Добавить тариф</a>
             </section>
             <section id="bookings">
-                <h2>Документ с бронированиями</h2>
+                <h2>Бронирования</h2>
                 <table>
                     <thead>
                         <tr class="table-header">
-                            <th class="table-body-cell">ФИО</th>
+                            <th class="table-body-cell">Клиент</th>
+                            <th class="table-body-cell">Тариф</th>
                             <th class="table-body-cell">Дата бронирования</th>
                             <th class="table-body-cell">Время</th>
-                            <th class="table-body-cell">Количество человек</th>
                         </tr>
                     </thead>
                     <tbody>
+                        {{range .Bookings}}
+                        <tr class="table-body">
+                            <td class="table-body-cell hidden-id">{{.ID}}</td>
+                            <td class="table-body-cell">{{.ClientName}}</td>
+                            <td class="table-body-cell">{{.TariffName}}</td>
+                            <td class="table-body-cell">{{.BookingDate}}</td>
+                            <td class="table-body-cell">{{.BookingTime}}</td>
+                        </tr>
+                        {{end}}
                     </tbody>
                 </table>
             </section>

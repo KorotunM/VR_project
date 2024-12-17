@@ -1,14 +1,9 @@
 package database
 
-import (
-	"time"
-
-	"go.mongodb.org/mongo-driver/bson/primitive"
-)
-
 type AdminPageData struct {
-	Clients []Client
-	Tariffs []TariffTitle
+	Clients  []Client
+	Tariffs  []TariffTitle
+	Bookings []BookingDocument
 }
 
 type Client struct {
@@ -64,9 +59,11 @@ type AdminFormClient struct {
 }
 
 type BookingDocument struct {
-	ID          primitive.ObjectID `bson:"_id,omitempty" json:"id"`          // ID документа (генерируется MongoDB)
-	ClientID    primitive.ObjectID `bson:"client_id" json:"client_id"`       // ID клиента (ссылка на другой документ)
-	TariffID    primitive.ObjectID `bson:"tariff_id" json:"tariff_id"`       // ID тарифа (ссылка на другой документ)
-	BookingDate time.Time          `bson:"booking_date" json:"booking_date"` // Дата бронирования
-	BookingTime string             `bson:"booking_time" json:"booking_time"` // Время бронирования
+	ID          string `bson:"_id,omitempty" json:"id"`    // ID документа (генерируется MongoDB)
+	ClientID    string `bson:"client_id" json:"client_id"` // ID клиента (ссылка на другой документ)
+	ClientName  string
+	TariffID    string `bson:"tariff_id" json:"tariff_id"` // ID тарифа (ссылка на другой документ)
+	TariffName  string
+	BookingDate string `bson:"booking_date" json:"booking_date"` // Дата бронирования
+	BookingTime string `bson:"booking_time" json:"booking_time"` // Время бронирования
 }

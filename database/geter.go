@@ -89,3 +89,33 @@ func GetTariff(r *http.Request) (Tariff, error) {
 	}
 	return tariff, nil
 }
+
+func GetAllBookings() ([]BookingDocument, error) {
+	var bookings []BookingDocument
+
+	// для автоматического выключения, если запрос завис
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	// Работа с коллекцией
+	db := MongoClient.Database("Vr")
+	collection := db.Collection("Booking")
+
+	filter := bson.M{} // Получаем все бронирования
+	cursor, err := collection.Find(ctx, filter)
+	if err != nil {
+		return nil, fmt.Errorf("error search bookings: %v", err)
+	}
+	defer cursor.Close(ctx)
+
+	if err := cursor.All(ctx, &bookings); err != nil {
+		return nil, fmt.Errorf("error bookings reading: %v", err)
+	}
+
+	// оставляем только год, месяц и день
+	for index := range bookings {
+		bookings[index].BookingDate = bookings[index].BookingDate[:10]
+	}
+
+	return bookings, nil
+}

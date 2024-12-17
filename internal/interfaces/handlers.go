@@ -9,19 +9,6 @@ import (
 	"strconv"
 )
 
-// func HomePage(w http.ResponseWriter, r *http.Request) {
-// 	tmp, err := template.ParseFiles("../web/templates/index.html")
-// 	if err != nil {
-// 		fmt.Fprintf(w, "Error loading template: %v", err)
-// 		return
-// 	}
-// 	err = tmp.Execute(w, nil)
-// 	if err != nil {
-// 		fmt.Fprintf(w, "Error rendering template: %v", err)
-// 		return
-// 	}
-// }
-
 func AdminPage(w http.ResponseWriter, r *http.Request) {
 	var adminPageData database.AdminPageData
 	clients, err := database.GetClients()
@@ -34,6 +21,11 @@ func AdminPage(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Error receiving tariffs: %v", err)
 		return
 	}
+	bookings, err := database.GetAllBookings()
+	if err != nil {
+		fmt.Fprintf(w, "Error receiving bookings: %v", err)
+		return
+	}
 	tmp, err := template.ParseFiles("../web/templates/admin/admin.html")
 	if err != nil {
 		fmt.Fprintf(w, "Error loading template: %v", err)
@@ -41,6 +33,29 @@ func AdminPage(w http.ResponseWriter, r *http.Request) {
 	}
 	adminPageData.Clients = clients
 	adminPageData.Tariffs = tariffs
+	adminPageData.Bookings = bookings
+
+	// заполнение имен клиентов и названий тарифов
+	for i := range adminPageData.Bookings {
+		for j := range adminPageData.Clients {
+			if adminPageData.Bookings[i].ClientID == adminPageData.Clients[j].Id {
+				adminPageData.Bookings[i].ClientName = adminPageData.Clients[j].Name
+			}
+		}
+		if adminPageData.Bookings[i].ClientName == "" {
+			fmt.Fprintf(w, "Error: client not found")
+			return
+		}
+		for j := range adminPageData.Tariffs {
+			if adminPageData.Bookings[i].TariffID == adminPageData.Tariffs[j].Id {
+				adminPageData.Bookings[i].TariffName = adminPageData.Tariffs[j].Name
+			}
+		}
+		if adminPageData.Bookings[i].TariffName == "" {
+			fmt.Fprintf(w, "Error: tariff not found")
+			return
+		}
+	}
 	err = tmp.Execute(w, adminPageData)
 	if err != nil {
 		fmt.Fprintf(w, "Error rendering template: %v", err)
