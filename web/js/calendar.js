@@ -119,6 +119,8 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(data => {
             console.log("Успешно:", data);
             alert("Бронирование успешно отправлено!");
+
+            document.dispatchEvent(new Event("formSubmitted"));
         })
         .catch(error => {
             console.error("Ошибка:", error);

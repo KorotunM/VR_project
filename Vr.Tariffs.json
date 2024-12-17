@@ -114,4 +114,31 @@
       "platform": "PS"
     }
   ]
+},
+{
+  "_id": {
+    "$oid": "6761e9a2297801e7b653d6db"
+  },
+  "name": "Чёрная Пятница",
+  "price": 2700,
+  "games": [
+    {
+      "name": "Minecraft",
+      "genre": "Landscape"
+    },
+    {
+      "name": "Five Nights at KUBGU",
+      "genre": "Horror"
+    }
+  ],
+  "devices": [
+    {
+      "name": "Oculus Quest 3",
+      "platform": "VR"
+    },
+    {
+      "name": "XREAL Air 2 Pro Beam Bundle, Smart AR Glasses, Hub Gaming Handheld",
+      "platform": "Glasses"
+    }
+  ]
 }]
