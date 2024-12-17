@@ -67,3 +67,11 @@ type BookingDocument struct {
 	BookingDate string `bson:"booking_date" json:"booking_date"` // Дата бронирования
 	BookingTime string `bson:"booking_time" json:"booking_time"` // Время бронирования
 }
+type BookingRequest struct {
+	Name        string `json:"name"`
+	Email       string `json:"email"`
+	Phone       string `json:"phone"`
+	Tariff      string `json:"tariff"`
+	BookingDate string `json:"booking_date"`
+	BookingTime string `json:"booking_time"`
+}

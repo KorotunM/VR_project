@@ -60,7 +60,7 @@
         <!-- Форма бронирования -->
         <div class="booking-form">
             <h2>Забронировать сеанс</h2>
-            <form>
+            <form id="booking-form" method="post" action="/booking">
                 <label for="tariff-select">Тариф:</label>
                 <select id="tariff-select" name="tariff">
                     {{ range .Tariffs }}
@@ -73,7 +73,10 @@
     
                 <label for="phone">Телефон:</label>
                 <input type="tel" id="phone" name="phone" required>
-    
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+
                 <label for="booking-date">Выберите дату:</label>
 <input type="date" id="booking-date" name="booking-date">
 

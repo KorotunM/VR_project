@@ -186,6 +186,7 @@ main {
 .tariff-slider {
     text-align: center;
     width: 100%;
+    overflow-x: hidden;
 }
 
 .tariff-slider h2 {
@@ -198,14 +199,15 @@ main {
     position: relative;
     width: 90%;
     margin: 0 auto;
-    overflow: hidden;
+    overflow: visible;
 }
-
 .slider-container {
     display: flex;
-    gap: 20px;
     transition: transform 0.3s ease-in-out;
+    will-change: transform;
+    gap: 20px;
 }
+
 
 .tariff-card {
     flex: 0 0 auto;
@@ -274,18 +276,19 @@ main {
     cursor: pointer;
     z-index: 10;
     font-size: 18px;
+    transition: box-shadow 0.2s linear;
 }
 
 .slider-btn.prev {
-    left: -2px; /* Двигаем кнопку левее слайдера */
+    left: -50px; /* Двигаем кнопку левее слайдера */
 }
 
 .slider-btn.next {
-    right: -2px; /* Двигаем кнопку правее слайдера */
+    right: -50px; /* Двигаем кнопку правее слайдера */
 }
 
 .slider-btn:hover {
-    background-color: rgba(0, 0, 0, 0.9);
+    box-shadow: 0.4px 0.4px 7px #00BFFF;
 }
 .tariff-card {
     flex: 0 0 auto;

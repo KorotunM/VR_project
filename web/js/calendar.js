@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const availableTimesSection = document.getElementById("available-times");
     const timeButtonsContainer = document.getElementById("time-buttons");
     const cancelSelectionButton = document.getElementById("cancel-selection");
+    const bookingForm = document.getElementById("booking-form");
 
     let selectedTime = null; // Для хранения выбранного времени
 
@@ -87,5 +88,41 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             availableTimesSection.style.display = "none";
         }
+    });
+
+    // Обработка отправки формы
+    bookingForm.addEventListener("submit", function (e) {
+        e.preventDefault(); // Предотвращаем стандартное поведение формы
+
+        const formData = {
+            name: document.getElementById("name").value,
+            email: document.getElementById("email").value,
+            phone: document.getElementById("phone").value,
+            tariff: document.getElementById("tariff-select").value,
+            booking_date: document.getElementById("booking-date").value,
+            booking_time: selectedTime || "12:00" // Используем выбранное время или дефолтное
+        };
+
+        console.log("Отправляем данные:", formData);
+
+        fetch("/booking", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => {
+            if (!response.ok) throw new Error("Ошибка сервера");
+            return response.text();
+        })
+        .then(data => {
+            console.log("Успешно:", data);
+            alert("Бронирование успешно отправлено!");
+        })
+        .catch(error => {
+            console.error("Ошибка:", error);
+            alert("Произошла ошибка при отправке бронирования.");
+        });
     });
 });
