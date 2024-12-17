@@ -46,21 +46,21 @@ type AjaxDeleteElementTariff struct {
 	Name string `json:"name"`
 }
 
-type AdminFormTariffData struct {
+type AdminFormTariff struct {
 	Validation string
 	IdTariff   string
 	Action     string
 	Name       string
 	Genre      string
 	Platform   string
+	Price      int
 }
 
-type AdminFormTariff struct {
-	Validation string
-	IdTariff   string
-	Action     string
-	Name       string
-	Price      int
+type AdminFormClient struct {
+	Action string
+	Name   string
+	Phone  string
+	Email  string
 }
 
 type BookingDocument struct {

@@ -161,3 +161,34 @@ func AddTariffDB(r *http.Request) error {
 
 	return nil
 }
+
+func AddClientDB(r *http.Request) error {
+	// Получаем параметры формы
+	name := r.FormValue("name")
+	phone := r.FormValue("phone")
+	email := r.FormValue("email")
+
+	// Проверяем, заполнены ли все поля
+	if name == "" || phone == "" || email == "" {
+		return fmt.Errorf("all fields are required")
+	}
+
+	// Подключение к базе данных MongoDB
+	db := MongoClient.Database("Vr")
+	collection := db.Collection("Clients")
+
+	// Создаём структуру клиента
+	client := Client{
+		Name:  name,
+		Phone: phone,
+		Email: email,
+	}
+
+	// Вставляем клиента в базу данных
+	_, err := collection.InsertOne(context.TODO(), client)
+	if err != nil {
+		return fmt.Errorf("error adding new client: %v", err)
+	}
+
+	return nil
+}
