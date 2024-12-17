@@ -148,3 +148,23 @@ func DeleteClient(w http.ResponseWriter, r *http.Request) {
 	}
 	http.Redirect(w, r, "/admin", http.StatusSeeOther)
 }
+
+func AddClient(w http.ResponseWriter, r *http.Request) error {
+	err := database.AddClientDB(r)
+	if err != nil {
+		return fmt.Errorf("error adding client: %v", err)
+	}
+	http.Redirect(w, r, "/admin", http.StatusSeeOther)
+	return nil
+}
+
+func EditClient(w http.ResponseWriter, r *http.Request) error {
+	err := database.EditClientDB(r)
+	if err != nil {
+		return fmt.Errorf("error editing client: %v", err)
+	}
+
+	// Перенаправление пользователя на страницу с обновленным списком клиентов
+	http.Redirect(w, r, "/admin", http.StatusSeeOther)
+	return nil
+}

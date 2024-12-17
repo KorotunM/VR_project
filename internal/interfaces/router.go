@@ -26,4 +26,6 @@ func HandlerPages() {
 	http.HandleFunc("/admin/tariff/edit", EditTariffPage)
 	http.HandleFunc("/admin/tariff/delete", services.DeleteTariff)
 	http.HandleFunc("/admin/client/delete", services.DeleteClient)
+	http.HandleFunc("/admin/client/add", AddClientPage)
+	http.HandleFunc("/admin/client/edit", EditClientPage)
 }

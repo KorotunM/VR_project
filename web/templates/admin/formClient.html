@@ -23,9 +23,6 @@
             <h1>{{.Action}} клиента</h1>
         </header>
         <main>
-            {{if .Validation}}
-            <p class="validation-text">{{.Validation}}</p>
-            {{end}}
             <form action="#" method="POST">
                 <label for="name">ФИО клиента:</label>
                 <input type="text" id="name" name="name" value="{{if .Name}}{{.Name}}{{end}}" required />

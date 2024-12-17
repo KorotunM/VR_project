@@ -73,7 +73,7 @@ func TariffPage(w http.ResponseWriter, r *http.Request) {
 
 func AddGamePage(w http.ResponseWriter, r *http.Request) {
 	var (
-		answer               database.AdminFormTariffData
+		answer               database.AdminFormTariff
 		validation, tariffId string
 		err                  error
 	)
@@ -106,7 +106,7 @@ func AddGamePage(w http.ResponseWriter, r *http.Request) {
 
 func EditGamePage(w http.ResponseWriter, r *http.Request) {
 	var (
-		answer                            database.AdminFormTariffData
+		answer                            database.AdminFormTariff
 		validation, tariffId, name, genre string
 		err                               error
 	)
@@ -145,7 +145,7 @@ func EditGamePage(w http.ResponseWriter, r *http.Request) {
 
 func AddDevicePage(w http.ResponseWriter, r *http.Request) {
 	var (
-		answer               database.AdminFormTariffData
+		answer               database.AdminFormTariff
 		validation, tariffId string
 		err                  error
 	)
@@ -178,7 +178,7 @@ func AddDevicePage(w http.ResponseWriter, r *http.Request) {
 
 func EditDevicePage(w http.ResponseWriter, r *http.Request) {
 	var (
-		answer                               database.AdminFormTariffData
+		answer                               database.AdminFormTariff
 		validation, tariffId, name, platform string
 		err                                  error
 	)
@@ -278,6 +278,71 @@ func EditTariffPage(w http.ResponseWriter, r *http.Request) {
 		answer.Validation = validation
 	}
 	tmp, err := template.ParseFiles("../web/templates/admin/formTariff.html")
+	if err != nil {
+		fmt.Fprintf(w, "Error loading template: %v", err)
+		return
+	}
+	err = tmp.Execute(w, answer)
+	if err != nil {
+		fmt.Fprintf(w, "Error rendering template: %v", err)
+		return
+	}
+}
+
+func AddClientPage(w http.ResponseWriter, r *http.Request) {
+	var (
+		answer database.AdminFormClient
+		err    error
+	)
+	if r.Method == http.MethodPost {
+		err = services.AddClient(w, r)
+		if err != nil {
+			fmt.Fprintf(w, "Error adding client: %v", err)
+			return
+		}
+	}
+	answer.Action = "Добавить"
+	tmp, err := template.ParseFiles("../web/templates/admin/formClient.html")
+	if err != nil {
+		fmt.Fprintf(w, "Error loading template: %v", err)
+		return
+	}
+	err = tmp.Execute(w, answer)
+	if err != nil {
+		fmt.Fprintf(w, "Error rendering template: %v", err)
+		return
+	}
+}
+
+func EditClientPage(w http.ResponseWriter, r *http.Request) {
+	var (
+		answer             database.AdminFormClient
+		name, email, phone string
+		err                error
+	)
+
+	name = r.URL.Query().Get("name")
+	email = r.URL.Query().Get("email")
+	phone = r.URL.Query().Get("phone")
+
+	if name == "" || email == "" || phone == "" {
+		fmt.Fprintf(w, "Error getting parameters from URL")
+		return
+	}
+
+	answer.Action = "Редактировать"
+	answer.Name = name
+	answer.Email = email
+	answer.Phone = phone
+
+	if r.Method == http.MethodPost {
+		err = services.EditClient(w, r)
+		if err != nil {
+			fmt.Fprintf(w, "Error editing client: %v", err)
+			return
+		}
+	}
+	tmp, err := template.ParseFiles("../web/templates/admin/formClient.html")
 	if err != nil {
 		fmt.Fprintf(w, "Error loading template: %v", err)
 		return
