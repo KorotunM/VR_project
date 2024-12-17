@@ -95,7 +95,7 @@ func AddTariff(w http.ResponseWriter, r *http.Request) (string, error) {
 		}
 		return "", fmt.Errorf("error adding tariff: %v", err)
 	}
-	http.Redirect(w, r, "/admin", http.StatusSeeOther)
+	http.Redirect(w, r, "/admin#tariffs", http.StatusSeeOther)
 	return "", nil
 }
 
@@ -132,7 +132,7 @@ func DeleteTariff(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Редирект на главную страницу админки
-	http.Redirect(w, r, "/admin", http.StatusSeeOther)
+	http.Redirect(w, r, "/admin#tariffs", http.StatusSeeOther)
 }
 
 func DeleteClient(w http.ResponseWriter, r *http.Request) {
@@ -146,7 +146,7 @@ func DeleteClient(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Error deleting client: %v", err)
 		return
 	}
-	http.Redirect(w, r, "/admin", http.StatusSeeOther)
+	http.Redirect(w, r, "/admin#clients", http.StatusSeeOther)
 }
 
 func AddClient(w http.ResponseWriter, r *http.Request) error {
@@ -154,7 +154,7 @@ func AddClient(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return fmt.Errorf("error adding client: %v", err)
 	}
-	http.Redirect(w, r, "/admin", http.StatusSeeOther)
+	http.Redirect(w, r, "/admin#clients", http.StatusSeeOther)
 	return nil
 }
 
@@ -165,6 +165,31 @@ func EditClient(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	// Перенаправление пользователя на страницу с обновленным списком клиентов
-	http.Redirect(w, r, "/admin", http.StatusSeeOther)
+	http.Redirect(w, r, "/admin#clients", http.StatusSeeOther)
+	return nil
+}
+
+func DeleteBooking(w http.ResponseWriter, r *http.Request) {
+	var err error
+	if r.Method != http.MethodGet {
+		fmt.Fprintf(w, "Invalid request method")
+		return
+	}
+	err = database.DeleteBookingDB(r)
+	if err != nil {
+		fmt.Fprintf(w, "Error deleting booking: %v", err)
+		return
+	}
+	http.Redirect(w, r, "/admin#bookings", http.StatusSeeOther)
+}
+
+func EditBooking(w http.ResponseWriter, r *http.Request) error {
+	err := database.EditBookingDB(r)
+	if err != nil {
+		return fmt.Errorf("error editing booking: %v", err)
+	}
+
+	// Перенаправление пользователя на страницу с обновленным списком клиентов
+	http.Redirect(w, r, "/admin#bookings", http.StatusSeeOther)
 	return nil
 }

@@ -58,6 +58,16 @@ type AdminFormClient struct {
 	Email  string
 }
 
+type AdminFormBooking struct {
+	Action         string
+	ClientName     string
+	TariffName     string
+	Tariffs        []string
+	BookingDate    string
+	BookingTime    string
+	AvailableTimes []string
+}
+
 type BookingDocument struct {
 	ID          string `bson:"_id,omitempty" json:"id"`    // ID документа (генерируется MongoDB)
 	ClientID    string `bson:"client_id" json:"client_id"` // ID клиента (ссылка на другой документ)

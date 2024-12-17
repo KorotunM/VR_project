@@ -103,3 +103,24 @@ func DeleteClientDB(r *http.Request) error {
 	}
 	return nil
 }
+
+func DeleteBookingDB(r *http.Request) error {
+	id := r.URL.Query().Get("id")
+	if id == "" {
+		return fmt.Errorf("missing booking ID")
+	}
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return fmt.Errorf("invalid booking ID: %v", err)
+	}
+
+	db := MongoClient.Database("Vr")
+	collection := db.Collection("Booking")
+
+	filter := bson.M{"_id": objectId}
+	_, err = collection.DeleteOne(context.TODO(), filter)
+	if err != nil {
+		return fmt.Errorf("error deleting booking from database: %v", err)
+	}
+	return nil
+}

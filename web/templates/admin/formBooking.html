@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../../../web/css/admin.css">
+    <link rel="stylesheet" href="../../../web/css/actionforms.css">
+
+    <!-- <script defer src="../web/js/bookingEdit.js"></script> -->
+
+    <title>{{.Action}} клиента</title>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="sidebar">
+            <ul class="sidebar-button-container">
+                <li><h2 class="sidebar-title">Управление</h2></li>
+            </ul>
+            <div class="sidebar-buttons">
+            </div>
+            <a class="sidebar-back-button" href="/admin">Отмена</a>
+        </div>
+        <header class="header-container">
+            <h1>{{.Action}} бронирование</h1>
+        </header>
+        <main>
+            <form action="#" method="POST">
+                <!-- Имя клиента -->
+                <label for="name">ФИО клиента:</label>
+                <input type="text" id="name" name="name" value="{{.ClientName}}" required />
+    
+                <!-- Тариф -->
+                <label for="rate">Название тарифа:</label>
+                <select id="rate" name="rate" required>
+                    {{range .Tariffs}}
+                        <option value="{{.}}" {{if eq . $.TariffName}}selected{{end}}>{{.}}</option>
+                    {{end}}
+                </select>
+    
+                <!-- Дата брони -->
+                <label for="date">Дата бронирования:</label>
+                <input type="date" id="date" name="date" value="{{.BookingDate}}" required />
+    
+                <!-- Время брони -->
+                <label for="time">Время бронирования:</label>
+                <select id="time" name="time" required>
+                    <option value="">Сначала выберите дату</option>
+                    {{range .AvailableTimes}}
+                        <option value="{{.}}" {{if eq . $.BookingTime}}selected{{end}}>{{.}}</option>
+                    {{end}}
+                </select>
+    
+                <div class="button-container">
+                    <button type="submit">{{.Action}}</button>
+                </div>
+            </form>
+        </main>
+    </div>
+</body>
+</html>

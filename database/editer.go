@@ -268,3 +268,49 @@ func EditClientDB(r *http.Request) error {
 
 	return nil
 }
+
+func EditBookingDB(r *http.Request) error {
+	var (
+		clientId, name, email, phone string
+		objectClientId               primitive.ObjectID
+		err                          error
+	)
+
+	clientId = r.URL.Query().Get("id")
+	name = r.FormValue("name")
+	email = r.FormValue("email")
+	phone = r.FormValue("phone")
+
+	if clientId == "" || name == "" || email == "" || phone == "" {
+		return fmt.Errorf("missing required parameters")
+	}
+
+	// Конвертация clientId в ObjectID
+	objectClientId, err = primitive.ObjectIDFromHex(clientId)
+	if err != nil {
+		return fmt.Errorf("error converting client ID to ObjectID: %v", err)
+	}
+
+	// Обновление данных клиента
+	db := MongoClient.Database("Vr")
+	collection := db.Collection("Clients")
+
+	update := bson.M{
+		"$set": bson.M{
+			"name":         name,
+			"email":        email,
+			"phone number": phone,
+		},
+	}
+
+	_, err = collection.UpdateOne(
+		context.TODO(),
+		bson.M{"_id": objectClientId},
+		update,
+	)
+	if err != nil {
+		return fmt.Errorf("error updating client: %v", err)
+	}
+
+	return nil
+}

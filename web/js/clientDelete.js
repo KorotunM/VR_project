@@ -2,7 +2,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const rows = document.querySelectorAll("table tbody tr");
     const deleteButton = document.getElementById("delete-button");
     let selectedRow = null; // Текущая выбранная строка
-    let selectedId = ""; // Id выбранного пользователя
+    let selectedId = ""; // Id выбранной записи
+    let selectedType = ""; // Тип записи: "client" или "booking"
 
     rows.forEach(row => {
         row.addEventListener("click", function () {
@@ -15,12 +16,23 @@ document.addEventListener("DOMContentLoaded", function () {
                 row.classList.remove("selected");
                 selectedRow = null;
                 selectedId = "";
+                selectedType = "";
                 deleteButton.classList.add("disabled");
                 return;
             }
 
             // Убираем выделение со всех строк
             rows.forEach(r => r.classList.remove("selected"));
+
+            // Определяем тип записи по родительскому блоку
+            const parentSection = row.closest("section");
+            if (parentSection) {
+                if (parentSection.id === "clients") {
+                    selectedType = "client";
+                } else if (parentSection.id === "bookings") {
+                    selectedType = "booking";
+                }
+            }
 
             // Выделяем текущую строку
             row.classList.add("selected");
@@ -32,13 +44,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Обработка нажатия кнопки удаления
     deleteButton.addEventListener("click", function () {
-        if (!selectedRow || !selectedId) return;
+        if (!selectedRow || !selectedId || !selectedType) return;
 
         // Подтверждение удаления
-        const confirmDelete = confirm("Вы уверены, что хотите удалить этого клиента?");
+        const confirmDelete = confirm("Вы уверены, что хотите удалить эту запись?");
         if (!confirmDelete) return;
 
-        // Перенаправление с добавлением Id в URL
-        window.location.href = `/admin/client/delete?id=${encodeURIComponent(selectedId)}`;
+        // Формируем URL на основе типа записи
+        const baseUrl = selectedType === "client" ? "/admin/client/delete" : "/admin/booking/delete";
+        window.location.href = `${baseUrl}?id=${encodeURIComponent(selectedId)}`;
     });
 });

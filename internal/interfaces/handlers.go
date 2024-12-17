@@ -42,18 +42,10 @@ func AdminPage(w http.ResponseWriter, r *http.Request) {
 				adminPageData.Bookings[i].ClientName = adminPageData.Clients[j].Name
 			}
 		}
-		if adminPageData.Bookings[i].ClientName == "" {
-			fmt.Fprintf(w, "Error: client not found")
-			return
-		}
 		for j := range adminPageData.Tariffs {
 			if adminPageData.Bookings[i].TariffID == adminPageData.Tariffs[j].Id {
 				adminPageData.Bookings[i].TariffName = adminPageData.Tariffs[j].Name
 			}
-		}
-		if adminPageData.Bookings[i].TariffName == "" {
-			fmt.Fprintf(w, "Error: tariff not found")
-			return
 		}
 	}
 	err = tmp.Execute(w, adminPageData)
@@ -358,6 +350,56 @@ func EditClientPage(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	tmp, err := template.ParseFiles("../web/templates/admin/formClient.html")
+	if err != nil {
+		fmt.Fprintf(w, "Error loading template: %v", err)
+		return
+	}
+	err = tmp.Execute(w, answer)
+	if err != nil {
+		fmt.Fprintf(w, "Error rendering template: %v", err)
+		return
+	}
+}
+
+func EditBookingPage(w http.ResponseWriter, r *http.Request) {
+	var (
+		answer                     database.AdminFormBooking
+		client, tariff, date, time string
+		err                        error
+		tariffs                    []database.TariffTitle
+	)
+
+	client = r.URL.Query().Get("client")
+	tariff = r.URL.Query().Get("tariff")
+	date = r.URL.Query().Get("date")
+	time = r.URL.Query().Get("time")
+
+	answer.Action = "Редактировать"
+	answer.ClientName = client
+	answer.TariffName = tariff
+	answer.BookingDate = date
+	answer.BookingTime = time
+
+	tariffs, err = database.GetAllTariffs()
+	if err != nil {
+		fmt.Fprintf(w, "Error getting all tariffs: %v", err)
+		return
+	}
+
+	for i := range tariffs {
+		answer.Tariffs[i] = tariffs[i].Name
+	}
+
+	answer.AvailableTimes = []string{"10:00", "12:00", "14:00", "16:00", "18:00", "20:00"}
+
+	if r.Method == http.MethodPost {
+		err = services.EditBooking(w, r)
+		if err != nil {
+			fmt.Fprintf(w, "Error editing booking: %v", err)
+			return
+		}
+	}
+	tmp, err := template.ParseFiles("../web/templates/admin/formBooking.html")
 	if err != nil {
 		fmt.Fprintf(w, "Error loading template: %v", err)
 		return
