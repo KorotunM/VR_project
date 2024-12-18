@@ -120,3 +120,123 @@ func GetAllBookings() ([]BookingDocument, error) {
 
 	return bookings, nil
 }
+
+func GetBookingStatistics() ([]TariffStats, error) {
+	// Подключаемся к базе данных
+	db := MongoClient.Database("Vr")
+	bookingCollection := db.Collection("Booking")
+	tariffCollection := db.Collection("Tariffs")
+
+	// Получаем все бронирования
+	cursor, err := bookingCollection.Find(context.TODO(), bson.M{})
+	if err != nil {
+		return nil, fmt.Errorf("error fetching bookings: %v", err)
+	}
+	defer cursor.Close(context.TODO())
+
+	// Создаём структуру для хранения статистики по тарифам
+	statsMap := make(map[string]TariffStats)
+
+	// Обрабатываем все бронирования
+	for cursor.Next(context.TODO()) {
+		var booking BookingDocument
+		err := cursor.Decode(&booking)
+		if err != nil {
+			return nil, fmt.Errorf("error decoding booking document: %v", err)
+		}
+
+		// Конвертация bookingID в ObjectID
+		objectBookingID, err := primitive.ObjectIDFromHex(booking.TariffID)
+		if err != nil {
+			return nil, fmt.Errorf("error converting booking ID to ObjectID: %v", err)
+		}
+
+		// Получаем тариф по тарифу ID
+		var tariff Tariff
+		err = tariffCollection.FindOne(context.TODO(), bson.M{"_id": objectBookingID}).Decode(&tariff)
+		if err != nil {
+			return nil, fmt.Errorf("error fetching tariff: %v", err)
+		}
+
+		// Обновляем статистику по тарифу
+		if stats, exists := statsMap[tariff.Name]; exists {
+			stats.BookingsCount++
+			stats.CurrentProfit += tariff.Price
+			statsMap[tariff.Name] = stats
+		} else {
+			statsMap[tariff.Name] = TariffStats{
+				TariffName:    tariff.Name,
+				CurrentProfit: tariff.Price,
+				BookingsCount: 1,
+			}
+		}
+	}
+
+	// Преобразуем карту в срез
+	var statsSlice []TariffStats
+	for _, stats := range statsMap {
+		statsSlice = append(statsSlice, stats)
+	}
+
+	return statsSlice, nil
+}
+
+func GetDailyBookingStatistics() ([]DailyStats, error) {
+	// Подключаемся к базе данных
+	db := MongoClient.Database("Vr")
+	bookingCollection := db.Collection("Booking")
+
+	// Формируем запрос для выборки по дням
+	cursor, err := bookingCollection.Aggregate(context.TODO(), []bson.M{
+		{
+			"$project": bson.M{
+				"date": bson.M{
+					"$dateToString": bson.M{
+						"format": "%Y-%m-%d", // Форматируем только дату, без времени
+						"date":   "$booking_date",
+					},
+				},
+			},
+		},
+		{
+			"$group": bson.M{
+				"_id":   "$date",           // Группируем по дате
+				"count": bson.M{"$sum": 1}, // Считаем количество бронирований
+			},
+		},
+		{
+			"$sort": bson.M{
+				"_id": 1, // Сортируем по дате
+			},
+		},
+	})
+
+	if err != nil {
+		return nil, fmt.Errorf("error fetching daily booking statistics: %v", err)
+	}
+	defer cursor.Close(context.TODO())
+
+	// Создаем срез для статистики по дням
+	var dailyStats []DailyStats
+	for cursor.Next(context.TODO()) {
+		var result struct {
+			Date  string `bson:"_id"`
+			Count int    `bson:"count"`
+		}
+		err := cursor.Decode(&result)
+		if err != nil {
+			return nil, fmt.Errorf("error decoding result: %v", err)
+		}
+
+		dailyStats = append(dailyStats, DailyStats{
+			Date:          result.Date,
+			BookingsCount: result.Count,
+		})
+	}
+
+	if err := cursor.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating over cursor: %v", err)
+	}
+
+	return dailyStats, nil
+}

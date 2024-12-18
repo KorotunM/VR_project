@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -271,45 +272,96 @@ func EditClientDB(r *http.Request) error {
 
 func EditBookingDB(r *http.Request) error {
 	var (
-		clientId, name, email, phone string
-		objectClientId               primitive.ObjectID
-		err                          error
+		bookingID, clientID, tariffID, date, timeSlot string
+		objectBookingID, clientObjID, tariffObjID     primitive.ObjectID
+		bookingDate                                   time.Time
+		err                                           error
 	)
 
-	clientId = r.URL.Query().Get("id")
-	name = r.FormValue("name")
-	email = r.FormValue("email")
-	phone = r.FormValue("phone")
+	// Получаем параметры из URL и формы
+	bookingID = r.URL.Query().Get("id")
+	oldData := r.URL.Query().Get("date")
+	oldTime := r.URL.Query().Get("time")
+	clientID = r.FormValue("client")
+	tariffID = r.FormValue("tariff")
+	date = r.FormValue("date")
+	timeSlot = r.FormValue("time")
 
-	if clientId == "" || name == "" || email == "" || phone == "" {
+	// Проверка обязательных параметров
+	if bookingID == "" || clientID == "" || tariffID == "" || date == "" || timeSlot == "" {
 		return fmt.Errorf("missing required parameters")
 	}
 
-	// Конвертация clientId в ObjectID
-	objectClientId, err = primitive.ObjectIDFromHex(clientId)
+	// Конвертация bookingID в ObjectID
+	objectBookingID, err = primitive.ObjectIDFromHex(bookingID)
+	if err != nil {
+		return fmt.Errorf("error converting booking ID to ObjectID: %v", err)
+	}
+
+	// Конвертация clientID в ObjectID
+	clientObjID, err = primitive.ObjectIDFromHex(clientID)
 	if err != nil {
 		return fmt.Errorf("error converting client ID to ObjectID: %v", err)
 	}
 
-	// Обновление данных клиента
-	db := MongoClient.Database("Vr")
-	collection := db.Collection("Clients")
+	// Конвертация tariffID в ObjectID
+	tariffObjID, err = primitive.ObjectIDFromHex(tariffID)
+	if err != nil {
+		return fmt.Errorf("error converting tariff ID to ObjectID: %v", err)
+	}
 
+	// Парсинг даты
+	bookingDate, err = time.Parse("2006-01-02", date)
+	if err != nil {
+		return fmt.Errorf("error parsing booking date: %v", err)
+	}
+
+	// Подключаемся к базе данных
+	db := MongoClient.Database("Vr")
+	collection := db.Collection("Booking")
+
+	// Формируем фильтр для поиска бронирований с такой же датой и временем
+	filter := bson.M{
+		"booking_date": bookingDate,
+		"booking_time": timeSlot,
+	}
+
+	// Проверяем, есть ли уже запись с таким же днем и временем
+	count, err := collection.CountDocuments(context.TODO(), filter)
+	if err != nil {
+		return fmt.Errorf("error checking if time is already booked: %v", err)
+	}
+	if oldData == date && oldTime == timeSlot {
+		if count != 1 {
+			return fmt.Errorf("time already exist")
+		}
+	} else {
+		if count > 0 {
+			return fmt.Errorf("time already exist")
+		}
+	}
+
+	// Структура обновления
 	update := bson.M{
 		"$set": bson.M{
-			"name":         name,
-			"email":        email,
-			"phone number": phone,
+			"client_id":    clientObjID,
+			"tariff_id":    tariffObjID,
+			"booking_date": bookingDate,
+			"booking_time": timeSlot,
 		},
 	}
 
+	// Выполняем обновление
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
 	_, err = collection.UpdateOne(
-		context.TODO(),
-		bson.M{"_id": objectClientId},
+		ctx,
+		bson.M{"_id": objectBookingID},
 		update,
 	)
 	if err != nil {
-		return fmt.Errorf("error updating client: %v", err)
+		return fmt.Errorf("error updating booking: %v", err)
 	}
 
 	return nil

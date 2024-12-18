@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"time"
 )
 
 func DeleteElementTariff(w http.ResponseWriter, r *http.Request) {
@@ -187,14 +186,24 @@ func DeleteBooking(w http.ResponseWriter, r *http.Request) {
 func EditBooking(w http.ResponseWriter, r *http.Request) error {
 	err := database.EditBookingDB(r)
 	if err != nil {
+		if err.Error() == "time already exist" {
+			return fmt.Errorf("time already exist")
+		}
 		return fmt.Errorf("error editing booking: %v", err)
 	}
-
 	// Перенаправление пользователя на страницу с обновленным списком клиентов
 	http.Redirect(w, r, "/admin#bookings", http.StatusSeeOther)
 	return nil
 }
 
-func FormatDate(t time.Time, layout string) string {
-	return t.Format(layout)
+func AddBooking(w http.ResponseWriter, r *http.Request) error {
+	err := database.AddBookingDB(r)
+	if err != nil {
+		if err.Error() == "time already exist" {
+			return fmt.Errorf("time already exist")
+		}
+		return fmt.Errorf("error adding booking: %v", err)
+	}
+	http.Redirect(w, r, "/admin#bookings", http.StatusSeeOther)
+	return nil
 }

@@ -3,9 +3,11 @@ package database
 import "time"
 
 type AdminPageData struct {
-	Clients  []Client
-	Tariffs  []TariffTitle
-	Bookings []BookingDocument
+	Clients       []Client
+	Tariffs       []TariffTitle
+	Bookings      []BookingDocument
+	Statistic     []TariffStats
+	StatisticDays []DailyStats
 }
 
 type Client struct {
@@ -63,11 +65,13 @@ type AdminFormClient struct {
 type AdminFormBooking struct {
 	Action         string
 	ClientName     string
+	Clients        []Client
 	TariffName     string
-	Tariffs        []string
+	Tariffs        []TariffTitle
 	BookingDate    string
 	BookingTime    string
 	AvailableTimes []string
+	Validation     string
 }
 
 type BookingDocument struct {
@@ -87,4 +91,15 @@ type BookingRequest struct {
 	Tariff      string `json:"tariff"`
 	BookingDate string `json:"booking_date"`
 	BookingTime string `json:"booking_time"`
+}
+
+type TariffStats struct {
+	TariffName    string
+	CurrentProfit int
+	BookingsCount int
+}
+
+type DailyStats struct {
+	Date          string `json:"date"`
+	BookingsCount int    `json:"bookings_count"`
 }

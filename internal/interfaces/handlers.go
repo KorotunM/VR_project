@@ -7,6 +7,8 @@ import (
 	"html/template"
 	"net/http"
 	"strconv"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 func AdminPage(w http.ResponseWriter, r *http.Request) {
@@ -24,6 +26,16 @@ func AdminPage(w http.ResponseWriter, r *http.Request) {
 	bookings, err := database.GetAllBookings()
 	if err != nil {
 		fmt.Fprintf(w, "Error receiving bookings: %v", err)
+		return
+	}
+	adminPageData.Statistic, err = database.GetBookingStatistics()
+	if err != nil {
+		fmt.Fprintf(w, "Error getting statistic: %v", err)
+		return
+	}
+	adminPageData.StatisticDays, err = database.GetDailyBookingStatistics()
+	if err != nil {
+		fmt.Fprintf(w, "Error getting statistic days: %v", err)
 		return
 	}
 	tmp, err := template.ParseFiles("../web/templates/admin/admin.html")
@@ -369,6 +381,7 @@ func EditBookingPage(w http.ResponseWriter, r *http.Request) {
 		time                 string
 		err                  error
 		tariffs              []database.TariffTitle
+		clients              []database.Client
 	)
 
 	client = r.URL.Query().Get("client")
@@ -388,25 +401,123 @@ func EditBookingPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	for i := range tariffs {
-		answer.Tariffs = append(answer.Tariffs, tariffs[i].Name)
+	answer.Tariffs = tariffs
+
+	clients, err = database.GetClients()
+	if err != nil {
+		fmt.Fprintf(w, "Error getting all clients: %v", err)
+		return
 	}
+
+	answer.Clients = clients
 
 	answer.AvailableTimes = []string{"10:00", "12:00", "14:00", "16:00", "18:00", "20:00"}
 
 	if r.Method == http.MethodPost {
 		err = services.EditBooking(w, r)
 		if err != nil {
-			fmt.Fprintf(w, "Error editing booking: %v", err)
-			return
+			if err.Error() == "time already exist" {
+				// Если ошибка валидации (занятое время), заполняем поле ошибки
+				answer.Validation = "Это время уже занято"
+			} else {
+				fmt.Fprintf(w, "Error editing booking: %v", err)
+				return
+			}
 		}
 	}
+
 	tmp, err := template.ParseFiles("../web/templates/admin/formBooking.html")
 	if err != nil {
 		fmt.Fprintf(w, "Error loading template: %v", err)
 		return
 	}
 	err = tmp.Execute(w, answer)
+	if err != nil {
+		fmt.Fprintf(w, "Error rendering template: %v", err)
+		return
+	}
+}
+
+func AddBookingPage(w http.ResponseWriter, r *http.Request) {
+	var (
+		answer database.AdminFormBooking
+		err    error
+	)
+
+	tariffs, err := database.GetAllTariffs()
+	if err != nil {
+		fmt.Fprintf(w, "Error getting all tariffs: %v", err)
+		return
+	}
+
+	answer.Tariffs = tariffs
+
+	clients, err := database.GetClients()
+	if err != nil {
+		fmt.Fprintf(w, "Error getting all clients: %v", err)
+		return
+	}
+
+	answer.Clients = clients
+
+	answer.AvailableTimes = []string{"10:00", "12:00", "14:00", "16:00", "18:00", "20:00"}
+
+	if r.Method == http.MethodPost {
+		err = services.AddBooking(w, r)
+		if err != nil {
+			if err.Error() == "time already exist" {
+				// Если ошибка валидации (занятое время), заполняем поле ошибки
+				answer.Validation = "Это время уже занято"
+			} else {
+				fmt.Fprintf(w, "Error adding booking: %v", err)
+				return
+			}
+		}
+	}
+	answer.Action = "Добавить"
+	tmp, err := template.ParseFiles("../web/templates/admin/formBooking.html")
+	if err != nil {
+		fmt.Fprintf(w, "Error loading template: %v", err)
+		return
+	}
+	err = tmp.Execute(w, answer)
+	if err != nil {
+		fmt.Fprintf(w, "Error rendering template: %v", err)
+		return
+	}
+}
+
+func AdminLoginHandler(w http.ResponseWriter, r *http.Request) {
+	var (
+		// Здесь будет храниться логин и зашифрованный пароль администратора
+		adminUsername     = "admin"
+		adminPasswordHash = "$2a$10$JZCb33DSy2qcbTiEUMn8XeOM0jjCFgsDxlhKtE6aCdbMhTxpU/ovG"
+	)
+
+	// Проверяем, если метод запроса POST
+	if r.Method == "POST" {
+		// Получаем данные из формы
+		username := r.FormValue("username")
+		password := r.FormValue("password")
+
+		// Проверка логина и пароля
+		if username == adminUsername {
+			err := bcrypt.CompareHashAndPassword([]byte(adminPasswordHash), []byte(password))
+			if err == nil {
+				// Если логин и пароль совпали, перенаправляем на админку
+				http.Redirect(w, r, "/admin", http.StatusFound)
+				return
+			}
+
+		}
+	}
+
+	tmp, err := template.ParseFiles("../web/templates/admin/formAdmin.html")
+	if err != nil {
+		fmt.Fprintf(w, "Error loading template: %v", err)
+		return
+	}
+	err = tmp.Execute(w, nil)
 	if err != nil {
 		fmt.Fprintf(w, "Error rendering template: %v", err)
 		return

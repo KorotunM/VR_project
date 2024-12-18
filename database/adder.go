@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -191,4 +192,67 @@ func AddClientDB(r *http.Request) error {
 	}
 
 	return nil
+}
+
+func AddBookingDB(r *http.Request) error {
+	// Получаем параметры формы
+	clientID := r.FormValue("client")
+	tariffID := r.FormValue("tariff")
+	date := r.FormValue("date")
+	timeSlot := r.FormValue("time")
+
+	// Проверяем, заполнены ли все поля
+	if clientID == "" || tariffID == "" || date == "" || timeSlot == "" {
+		return fmt.Errorf("all fields are required")
+	}
+
+	// Конвертация clientID в ObjectID
+	clientObjID, err := primitive.ObjectIDFromHex(clientID)
+	if err != nil {
+		return fmt.Errorf("error converting client ID to ObjectID: %v", err)
+	}
+
+	// Конвертация tariffID в ObjectID
+	tariffObjID, err := primitive.ObjectIDFromHex(tariffID)
+	if err != nil {
+		return fmt.Errorf("error converting tariff ID to ObjectID: %v", err)
+	}
+
+	// Парсинг даты
+	bookingDate, err := time.Parse("2006-01-02", date)
+	if err != nil {
+		return fmt.Errorf("error parsing booking date: %v", err)
+	}
+
+	// Подключение к базе данных MongoDB
+	db := MongoClient.Database("Vr")
+	collection := db.Collection("Booking")
+
+	// Формируем фильтр для поиска бронирований с такой же датой и временем
+	filter := bson.M{
+		"booking_date": bookingDate,
+		"booking_time": timeSlot,
+	}
+
+	// Проверяем, есть ли уже запись с таким же днем и временем
+	count, err := collection.CountDocuments(context.TODO(), filter)
+	if err != nil {
+		return fmt.Errorf("error checking if time is already booked: %v", err)
+	}
+	if count > 0 {
+		return fmt.Errorf("time already exist")
+	}
+
+	// Структура бронирования
+	booking := map[string]interface{}{
+		"client_id":    clientObjID,
+		"tariff_id":    tariffObjID,
+		"booking_date": bookingDate,
+		"booking_time": timeSlot,
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	_, err = collection.InsertOne(ctx, booking)
+	return err
 }

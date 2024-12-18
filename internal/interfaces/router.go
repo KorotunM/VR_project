@@ -32,4 +32,6 @@ func HandlerPages() {
 	http.HandleFunc("/admin/client/edit", EditClientPage)
 	http.HandleFunc("/admin/booking/delete", services.DeleteBooking)
 	http.HandleFunc("/admin/booking/edit", EditBookingPage)
+	http.HandleFunc("/admin/booking/add", AddBookingPage)
+	http.HandleFunc("/admin/login", AdminLoginHandler)
 }

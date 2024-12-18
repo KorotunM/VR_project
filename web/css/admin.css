@@ -152,7 +152,7 @@ table {
     background-color: #535383;
 }
 
-.table-body {
+.table-body, .statistic-row {
     background-color: #3a3a66;
 }
 

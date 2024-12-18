@@ -7,8 +7,6 @@
     <link rel="stylesheet" href="../../../web/css/admin.css">
     <link rel="stylesheet" href="../../../web/css/actionforms.css">
 
-    <!-- <script defer src="../web/js/bookingEdit.js"></script> -->
-
     <title>{{.Action}} клиента</title>
 </head>
 <body>
@@ -19,22 +17,31 @@
             </ul>
             <div class="sidebar-buttons">
             </div>
-            <a class="sidebar-back-button" href="/admin">Отмена</a>
+            <a class="sidebar-back-button" href="/admin#bookings">Отмена</a>
         </div>
         <header class="header-container">
             <h1>{{.Action}} бронирование</h1>
         </header>
         <main>
+            {{if .Validation}}
+                <div class="validation-text">{{.Validation}}</div>
+            {{end}}
             <form action="#" method="POST">
-                <!-- Имя клиента -->
-                <label for="name">ФИО клиента:</label>
-                <input type="text" id="name" name="name" value="{{.ClientName}}" required />
+                <!-- Выбор клиента -->
+                <label for="client">Клиент:</label>
+                <select class="select-clients" id="client" name="client" required>
+                    <option value=""></option>
+                    {{range .Clients}}
+                        <option value="{{.Id}}" {{if eq .Name $.ClientName}}selected{{end}}>{{.Name}}</option>
+                    {{end}}
+                </select>
     
                 <!-- Тариф -->
-                <label for="rate">Название тарифа:</label>
-                <select id="rate" name="rate" required>
+                <label for="tariff">Тариф:</label>
+                <select class="select-tariffs" id="tariff" name="tariff" required>
+                    <option value=""></option>
                     {{range .Tariffs}}
-                        <option value="{{.}}" {{if eq . $.TariffName}}selected{{end}}>{{.}}</option>
+                        <option value="{{.Id}}" {{if eq .Name $.TariffName}}selected{{end}}>{{.Name}}</option>
                     {{end}}
                 </select>
     
@@ -44,8 +51,9 @@
     
                 <!-- Время брони -->
                 <label for="time">Время бронирования:</label>
-                <select id="time" name="time" required>
-                    <option value="">Сначала выберите дату</option>
+
+                <select class="select-time" id="time" name="time" required>
+                    <option value=""></option>
                     {{range .AvailableTimes}}
                         <option value="{{.}}" {{if eq . $.BookingTime}}selected{{end}}>{{.}}</option>
                     {{end}}

@@ -13,18 +13,18 @@
 </head>
 <body>
     <div class="admin-container">
-        <div class="sidebar">
+        <div id="sidebar" class="sidebar">
             <ul>
                 <li><h2 class="sidebar-title">Управление</h2></li>
                 <li><a class="sidebar-button" href="#clients">Клиенты</a></li>
                 <li><a class="sidebar-button" href="#tariffs">Тарифы</a></li>
                 <li><a class="sidebar-button" href="#bookings">Бронирования</a></li>
-                <li><a class="sidebar-button" href="#tariff-stats">Документ с статистикой по тарифам</a></li>
-                <li><a class="sidebar-button" href="#booking-stats">Документ с статистикой по броням</a></li>
+                <li><a class="sidebar-button" href="#tariff-stats">Статистика по тарифам</a></li>
+                <li><a class="sidebar-button" href="#booking-stats">Статистика по дням</a></li>
             </ul>
             <div class="sidebar-buttons">
-                <a id="edit-button" class="sidebar-action-button disabled" href="#">Изменить запись</a>
-                <a id="delete-button" class="sidebar-action-button disabled" href="#">Удалить запись</a>
+                <a id="edit-button" class="sidebar-action-button disabled" href="#sidebar">Изменить запись</a>
+                <a id="delete-button" class="sidebar-action-button disabled" href="#sidebar">Удалить запись</a>
             </div>
             <a class="sidebar-back-button" href="/">Выйти</a>
         </div>
@@ -87,26 +87,39 @@
                             <td class="table-body-cell">{{.BookingTime}}</td>
                         </tr>
                         {{end}}
+                        <tr class="add-row">
+                            <td class="table-body-button" colspan="4">
+                                <a href="/admin/booking/add" class="button">Добавить бронирование</a>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </section>
 
             <section id="tariff-stats">
-                <h2>Документ с статистикой по тарифам</h2>
+                <h2>Статистика по тарифам</h2>
                 <table>
                     <thead>
                         <tr class="table-header">
                             <th class="table-body-cell">Тариф</th>
-                            <th class="table-body-cell">Количество использований</th>
+                            <th class="table-body-cell">Текущая прибыль</th>
+                            <th class="table-body-cell">Количество броней</th>
                         </tr>
                     </thead>
                     <tbody>
+                        {{range .Statistic}}
+                            <tr class="statistic-row add-row">
+                                <td class="table-body-cell">{{.TariffName}}</td>
+                                <td class="table-body-cell">{{.CurrentProfit}}</td>
+                                <td class="table-body-cell">{{.BookingsCount}}</td>
+                            </tr>
+                        {{end}}
                     </tbody>
                 </table>
             </section>
 
             <section id="booking-stats">
-                <h2>Документ с статистикой по броням</h2>
+                <h2>Статистика по дням</h2>
                 <table>
                     <thead>
                         <tr class="table-header">
@@ -115,6 +128,12 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {{range .StatisticDays}}
+                            <tr class="statistic-row add-row">
+                                <td class="table-body-cell">{{.Date}}</td>
+                                <td class="table-body-cell">{{.BookingsCount}}</td>
+                            </tr>
+                        {{end}}
                     </tbody>
                 </table>
             </section>
