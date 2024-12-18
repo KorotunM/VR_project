@@ -1,5 +1,13 @@
 [{
   "_id": {
+    "$oid": "6761d459f297618f61ef8937"
+  },
+  "name": "Leonid",
+  "email": "krasava@gmail.com",
+  "phone number": "88009000000"
+},
+{
+  "_id": {
     "$oid": "675b61194001d3e9c33e2722"
   },
   "name": "Терентий",
@@ -22,14 +30,6 @@
   "name": "Mixail",
   "email": "loveWEB@mail.org",
   "phone number": "+7 9898081491"
-},
-{
-  "_id": {
-    "$oid": "6761e082c133537ae0445dcb"
-  },
-  "email": "loveWEB@mail.org",
-  "phone number": "87002341021",
-  "name": "BLIA"
 },
 {
   "_id": {
