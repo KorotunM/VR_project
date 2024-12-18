@@ -7,62 +7,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let selectedTime = null; // Для хранения выбранного времени
 
-    // Функция для отображения кнопок времени
-    function displayTimeButtons(times) {
-        timeButtonsContainer.innerHTML = ""; // Очищаем контейнер
-
-        times.forEach(time => {
-            const button = document.createElement("button");
-            button.textContent = time;
-            button.classList.add("time-button");
-            button.type = "button";
-
-            // Обработчик нажатия кнопки времени
-            button.addEventListener("click", () => {
-                selectTime(button, time);
-            });
-
-            timeButtonsContainer.appendChild(button);
-        });
-
-        // Скрываем кнопку отмены выбора
-        cancelSelectionButton.style.display = "none";
-    }
-
     // Функция выделения времени
     function selectTime(selectedButton, time) {
-        // Сбрасываем стиль всех кнопок
         document.querySelectorAll(".time-button").forEach(button => {
             button.classList.remove("selected");
             button.classList.add("dimmed");
         });
-
-        // Выделяем выбранную кнопку
         selectedButton.classList.add("selected");
         selectedButton.classList.remove("dimmed");
 
-        // Сохраняем выбранное время
         selectedTime = time;
-        console.log("Выбрано время:", selectedTime);
-
-        // Показываем кнопку "Отменить выбор"
         cancelSelectionButton.style.display = "inline-block";
     }
-
-    // Функция отмены выбора
-    cancelSelectionButton.addEventListener("click", () => {
-        // Сбрасываем стиль всех кнопок
-        document.querySelectorAll(".time-button").forEach(button => {
-            button.classList.remove("selected", "dimmed");
-        });
-
-        // Сбрасываем выбранное время
-        selectedTime = null;
-        console.log("Выбор времени отменен");
-
-        // Скрываем кнопку "Отменить выбор"
-        cancelSelectionButton.style.display = "none";
-    });
 
     // Запрос времени при выборе даты
     dateInput.addEventListener("change", () => {
@@ -74,16 +30,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 .then(availableTimes => {
                     availableTimesSection.style.display = "block";
 
-                    if (availableTimes.length > 0) {
-                        displayTimeButtons(availableTimes);
-                    } else {
-                        timeButtonsContainer.innerHTML = "<p>Нет доступного времени</p>";
-                    }
-                })
-                .catch(error => {
-                    console.error("Ошибка при получении данных:", error);
-                    availableTimesSection.style.display = "block";
-                    timeButtonsContainer.innerHTML = "<p>Ошибка загрузки данных</p>";
+                    timeButtonsContainer.innerHTML = "";
+                    availableTimes.forEach(time => {
+                        const button = document.createElement("button");
+                        button.textContent = time;
+                        button.classList.add("time-button");
+                        button.type = "button";
+                        button.addEventListener("click", () => selectTime(button, time));
+                        timeButtonsContainer.appendChild(button);
+                    });
                 });
         } else {
             availableTimesSection.style.display = "none";
@@ -92,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Обработка отправки формы
     bookingForm.addEventListener("submit", function (e) {
-        e.preventDefault(); // Предотвращаем стандартное поведение формы
+        e.preventDefault();
 
         const formData = {
             name: document.getElementById("name").value,
@@ -100,16 +55,12 @@ document.addEventListener("DOMContentLoaded", () => {
             phone: document.getElementById("phone").value,
             tariff: document.getElementById("tariff-select").value,
             booking_date: document.getElementById("booking-date").value,
-            booking_time: selectedTime || "12:00" // Используем выбранное время или дефолтное
+            booking_time: selectedTime || "12:00"
         };
-
-        console.log("Отправляем данные:", formData);
 
         fetch("/booking", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(formData)
         })
         .then(response => {
@@ -117,10 +68,8 @@ document.addEventListener("DOMContentLoaded", () => {
             return response.text();
         })
         .then(data => {
-            console.log("Успешно:", data);
             alert("Бронирование успешно отправлено!");
-
-            document.dispatchEvent(new Event("formSubmitted"));
+            clearFormAndButtons(bookingForm); // Очистка формы и кнопок
         })
         .catch(error => {
             console.error("Ошибка:", error);
