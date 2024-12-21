@@ -194,3 +194,11 @@ table {
     background-color: #2c2c51;
 }
 /*  */
+
+.highlight {
+    background-color: #41418d;
+}
+
+.highlight:hover {
+    background-color: #49499a;
+}
