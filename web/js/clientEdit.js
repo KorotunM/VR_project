@@ -58,10 +58,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
             editUrl = `/admin/client/edit?id=${encodeURIComponent(recordId)}&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&phone=${encodeURIComponent(phone)}`;
         } else if (selectedType === "booking") {
-            const bookingDate = cells[3]?.textContent.trim(); // Дата бронирования
-            const clientName = cells[1]?.textContent.trim(); // Имя клиента
-            const tariffName = cells[2]?.textContent.trim(); // имя тарифа
-            const bookingTime = cells[4]?.textContent.trim(); // Время бронирования
+            const bookingDate = cells[4]?.textContent.trim(); // Дата бронирования
+            const clientName = cells[2]?.textContent.trim(); // Имя клиента
+            const tariffName = cells[3]?.textContent.trim(); // имя тарифа
+            const bookingTime = cells[5]?.textContent.trim(); // Время бронирования
 
             editUrl = `/admin/booking/edit?id=${encodeURIComponent(recordId)}&client=${encodeURIComponent(clientName)}&tariff=${encodeURIComponent(tariffName)}&date=${encodeURIComponent(bookingDate)}&time=${encodeURIComponent(bookingTime)}`;
         }

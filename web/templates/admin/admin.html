@@ -8,6 +8,7 @@
 
     <script defer src="../web/js/clientEdit.js"></script>
     <script defer src="../web/js/clientDelete.js"></script>
+    <script defer src="../web/js/selector.js"></script>
 
     <title>Панель администратора</title>
 </head>
@@ -78,9 +79,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {{range .Bookings}}
+                        {{range .Bookings}} 
                         <tr class="table-body">
                             <td class="table-body-cell hidden-id">{{.ID}}</td>
+                            <td class="table-body-cell hidden-id">{{.ClientID}}</td>
                             <td class="table-body-cell">{{.ClientName}}</td>
                             <td class="table-body-cell">{{.TariffName}}</td>
                             <td class="table-body-cell">{{.Date}}</td>
