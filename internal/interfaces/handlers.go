@@ -568,16 +568,25 @@ func AddGeneralGamePage(w http.ResponseWriter, r *http.Request) {
 func EditGeneralGamePage(w http.ResponseWriter, r *http.Request) {
 	var (
 		answer database.AdminFormGeneralGame
+		price  string
 		err    error
 	)
 
 	answer.Game.Name = r.URL.Query().Get("name")
 	answer.Game.Genre = r.URL.Query().Get("genre")
+	price = r.URL.Query().Get("price")
 
-	if answer.Game.Name == "" || answer.Game.Genre == "" {
+	if answer.Game.Name == "" || answer.Game.Genre == "" || price == "" {
 		fmt.Fprintf(w, "Error getting parameters from URL")
 		return
 	}
+
+	intPrice, err := strconv.Atoi(price)
+	if err != nil {
+		fmt.Fprintf(w, "Error converting game's price")
+		return
+	}
+	answer.Game.Price = intPrice
 
 	answer.Action = "Редактировать"
 

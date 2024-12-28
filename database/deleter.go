@@ -130,18 +130,39 @@ func DeleteGeneralGameDB(r *http.Request) error {
 	if id == "" {
 		return fmt.Errorf("missing general game ID")
 	}
+
+	// Конвертируем ID в ObjectID
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return fmt.Errorf("invalid general game ID: %v", err)
 	}
 
+	// Подключаемся к базе данных
 	db := MongoClient.Database("Vr")
-	collection := db.Collection("Games")
+	gamesCollection := db.Collection("Games")
+	bookingsCollection := db.Collection("Booking")
 
+	// Удаляем игру из коллекции Games
 	filter := bson.M{"_id": objectId}
-	_, err = collection.DeleteOne(context.TODO(), filter)
+	_, err = gamesCollection.DeleteOne(context.TODO(), filter)
 	if err != nil {
 		return fmt.Errorf("error deleting general game from database: %v", err)
 	}
+
+	// Удаляем игру из всех бронирований
+	updateFilter := bson.M{
+		"general_games._id": objectId, // Фильтр ищет документы, где _id совпадает в массиве general_games
+	}
+	update := bson.M{
+		"$pull": bson.M{
+			"general_games": bson.M{"_id": objectId}, // Удаляем объект из массива general_games по _id
+		},
+	}
+
+	_, err = bookingsCollection.UpdateMany(context.TODO(), updateFilter, update)
+	if err != nil {
+		return fmt.Errorf("error removing general game from bookings: %v", err)
+	}
+
 	return nil
 }

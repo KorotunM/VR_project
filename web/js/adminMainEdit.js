@@ -73,13 +73,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Добавляем массив игр в URL
             const generalGamesParam = generalGames.map(game => `games[]=${encodeURIComponent(game)}`).join("&");
-            
+
             editUrl = `/admin/booking/edit?id=${encodeURIComponent(recordId)}&client=${encodeURIComponent(clientName)}&tariff=${encodeURIComponent(tariffName)}&${generalGamesParam}&date=${encodeURIComponent(bookingDate)}&time=${encodeURIComponent(bookingTime)}`;
         } else if (selectedType === "general-game") {
             const name = cells[1]?.textContent.trim(); // Название игры
             const genre = cells[2]?.textContent.trim(); // Жанр
+            const price = cells[3]?.textContent.trim(); // Цена
 
-            editUrl = `/admin/general-game/edit?id=${encodeURIComponent(recordId)}&name=${encodeURIComponent(name)}&genre=${encodeURIComponent(genre)}`;
+            editUrl = `/admin/general-game/edit?id=${encodeURIComponent(recordId)}&name=${encodeURIComponent(name)}&genre=${encodeURIComponent(genre)}&price=${encodeURIComponent(price)}`;
         }
 
         // Переход на страницу редактирования

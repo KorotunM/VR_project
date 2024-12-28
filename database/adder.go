@@ -273,9 +273,10 @@ func AddGeneralGameDB(r *http.Request) error {
 	// Получаем параметры формы
 	name := r.FormValue("name")
 	genre := r.FormValue("genre")
+	price := r.FormValue("price")
 
 	// Проверяем, заполнены ли все поля
-	if name == "" || genre == "" {
+	if name == "" || genre == "" || price == "" {
 		return fmt.Errorf("all fields are required")
 	}
 
@@ -293,10 +294,16 @@ func AddGeneralGameDB(r *http.Request) error {
 		return fmt.Errorf("game with this name already exists")
 	}
 
+	intPrice, err := strconv.Atoi(price)
+	if err != nil {
+		return fmt.Errorf("error converting game's price: %v", err)
+	}
+
 	// Создаём структуру общей игры
 	generalGame := GeneralGame{
 		Name:  name,
 		Genre: genre,
+		Price: intPrice,
 	}
 
 	// Вставляем общую игру в базу данных

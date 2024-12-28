@@ -381,16 +381,17 @@ func EditBookingDB(r *http.Request) error {
 
 func EditGeneralGameDB(r *http.Request) error {
 	var (
-		generalGameId, name, genre string
-		objectGeneralGameId        primitive.ObjectID
-		err                        error
+		generalGameId, name, genre, price string
+		objectGeneralGameId               primitive.ObjectID
+		err                               error
 	)
 
 	generalGameId = r.URL.Query().Get("id")
 	name = r.FormValue("name")
 	genre = r.FormValue("genre")
+	price = r.FormValue("price")
 
-	if generalGameId == "" || name == "" || genre == "" {
+	if generalGameId == "" || name == "" || genre == "" || price == "" {
 		return fmt.Errorf("missing required parameters")
 	}
 
@@ -417,10 +418,16 @@ func EditGeneralGameDB(r *http.Request) error {
 		return fmt.Errorf("game with this name already exists")
 	}
 
+	intPrice, err := strconv.Atoi(price)
+	if err != nil {
+		return fmt.Errorf("error converting game's price: %v", err)
+	}
+
 	update := bson.M{
 		"$set": bson.M{
 			"name":  name,
 			"genre": genre,
+			"price": intPrice,
 		},
 	}
 

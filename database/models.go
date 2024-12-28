@@ -112,6 +112,7 @@ type GeneralGame struct {
 	Id    string `bson:"_id,omitempty"`
 	Name  string `bson:"name"`
 	Genre string `bson:"genre"`
+	Price int    `bson:"price"`
 }
 
 type AdminFormGeneralGame struct {

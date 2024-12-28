@@ -75,18 +75,20 @@
                         <tr class="table-header">
                             <th class="table-body-cell">Название</th>
                             <th class="table-body-cell">Жанр</th>
+                            <th class="table-body-cell">Цена</th>
                         </tr>
                     </thead>
                     <tbody>
                         {{range .GeneralGames}}
-                        <tr class="table-body">
-                            <td class="table-body-cell hidden-id">{{.Id}}</td>
-                            <td class="table-body-cell">{{.Name}}</td>
-                            <td class="table-body-cell">{{.Genre}}</td>
-                        </tr>
+                            <tr class="table-body">
+                                <td class="table-body-cell hidden-id">{{.Id}}</td>
+                                <td class="table-body-cell">{{.Name}}</td>
+                                <td class="table-body-cell">{{.Genre}}</td>
+                                <td class="table-body-cell">{{.Price}}</td>
+                            </tr>
                         {{end}}
                         <tr class="add-row">
-                            <td class="table-body-button" colspan="2">
+                            <td class="table-body-button" colspan="3">
                                 <a href="/admin/general-game/add" class="button">Добавить общую игру</a>
                             </td>
                         </tr>
