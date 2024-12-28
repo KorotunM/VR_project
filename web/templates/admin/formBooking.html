@@ -7,7 +7,9 @@
     <link rel="stylesheet" href="../../../web/css/admin.css">
     <link rel="stylesheet" href="../../../web/css/actionforms.css">
 
-    <title>{{.Action}} клиента</title>
+    <script defer src="../../../web/js/adminBookingForm.js"></script>
+
+    <title>{{.Action}} бронирование</title>
 </head>
 <body>
     <div class="admin-container">
@@ -44,6 +46,20 @@
                         <option value="{{.Id}}" {{if eq .Name $.TariffName}}selected{{end}}>{{.Name}}</option>
                     {{end}}
                 </select>
+
+                <!-- Выбор общих игр -->
+                <label for="general-games">Общие игры:</label>
+                <div class="dropdown-container">
+                    <button type="button" class="dropdown-button" onclick="toggleDropdown()">Выберите общие игры (необязательно)</button>
+                    <div class="dropdown-list" id="dropdown-general-games">
+                        {{range .GeneralGames}}
+                            <label class="dropdown-item">
+                                <input type="checkbox" name="general-games" value="{{.Id}}">
+                                {{.Name}}
+                            </label>
+                        {{end}}
+                    </div>
+                </div>
     
                 <!-- Дата брони -->
                 <label for="date">Дата бронирования:</label>
@@ -60,7 +76,7 @@
                 </select>
     
                 <div class="button-container">
-                    <button type="submit">{{.Action}}</button>
+                    <button class="submit-button" type="submit">{{.Action}}</button>
                 </div>
             </form>
         </main>

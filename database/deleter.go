@@ -124,3 +124,24 @@ func DeleteBookingDB(r *http.Request) error {
 	}
 	return nil
 }
+
+func DeleteGeneralGameDB(r *http.Request) error {
+	id := r.URL.Query().Get("id")
+	if id == "" {
+		return fmt.Errorf("missing general game ID")
+	}
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return fmt.Errorf("invalid general game ID: %v", err)
+	}
+
+	db := MongoClient.Database("Vr")
+	collection := db.Collection("Games")
+
+	filter := bson.M{"_id": objectId}
+	_, err = collection.DeleteOne(context.TODO(), filter)
+	if err != nil {
+		return fmt.Errorf("error deleting general game from database: %v", err)
+	}
+	return nil
+}

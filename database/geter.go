@@ -10,7 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-// Подключение к MongoDB и получения данных клиентов
+// Получение данных клиентов
 func GetClients() ([]Client, error) {
 
 	// для автоматического выключения, если запрос завис
@@ -239,4 +239,29 @@ func GetDailyBookingStatistics() ([]DailyStats, error) {
 	}
 
 	return dailyStats, nil
+}
+
+func GetAllGeneralGames() ([]GeneralGame, error) {
+	var generalGames []GeneralGame
+
+	// для автоматического выключения, если запрос завис
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	// Работа с коллекцией
+	db := MongoClient.Database("Vr")
+	collection := db.Collection("Games")
+
+	filter := bson.M{} // Получаем все тарифы
+	cursor, err := collection.Find(ctx, filter)
+	if err != nil {
+		return nil, fmt.Errorf("error search tariffs: %v", err)
+	}
+	defer cursor.Close(ctx)
+
+	if err := cursor.All(ctx, &generalGames); err != nil {
+		return nil, fmt.Errorf("error tariffs reading: %v", err)
+	}
+
+	return generalGames, nil
 }

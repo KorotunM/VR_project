@@ -207,3 +207,42 @@ func AddBooking(w http.ResponseWriter, r *http.Request) error {
 	http.Redirect(w, r, "/admin#bookings", http.StatusSeeOther)
 	return nil
 }
+
+func AddGeneralGame(w http.ResponseWriter, r *http.Request) (string, error) {
+	err := database.AddGeneralGameDB(r)
+	if err != nil {
+		if err.Error() == "game with this name already exists" {
+			return "Игра с таким названием уже есть", nil
+		}
+		return "", fmt.Errorf("error adding general game: %v", err)
+	}
+	http.Redirect(w, r, "/admin#general-games", http.StatusSeeOther)
+	return "", nil
+}
+
+func EditGeneralGame(w http.ResponseWriter, r *http.Request) (string, error) {
+	err := database.EditGeneralGameDB(r)
+	if err != nil {
+		if err.Error() == "game with this name already exists" {
+			return "Игра с таким названием уже есть", nil
+		}
+		return "", fmt.Errorf("error editing general game: %v", err)
+	}
+
+	http.Redirect(w, r, "/admin#general-games", http.StatusSeeOther)
+	return "", nil
+}
+
+func DeleteGeneralGame(w http.ResponseWriter, r *http.Request) {
+	var err error
+	if r.Method != http.MethodGet {
+		fmt.Fprintf(w, "Invalid request method")
+		return
+	}
+	err = database.DeleteGeneralGameDB(r)
+	if err != nil {
+		fmt.Fprintf(w, "Error deleting general game: %v", err)
+		return
+	}
+	http.Redirect(w, r, "/admin#general-games", http.StatusSeeOther)
+}

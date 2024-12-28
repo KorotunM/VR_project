@@ -224,6 +224,17 @@ func AddBookingDB(r *http.Request) error {
 		return fmt.Errorf("error parsing booking date: %v", err)
 	}
 
+	// Обработка поля general_games
+	generalGameIDs := r.Form["general-games"] // Получаем массив значений из формы
+	var generalGames []bson.M                 // Массив для объектов с _id
+	for _, gameID := range generalGameIDs {
+		gameObjID, err := primitive.ObjectIDFromHex(gameID)
+		if err != nil {
+			return fmt.Errorf("error converting general game ID to ObjectID: %v", err)
+		}
+		generalGames = append(generalGames, bson.M{"_id": gameObjID})
+	}
+
 	// Подключение к базе данных MongoDB
 	db := MongoClient.Database("Vr")
 	collection := db.Collection("Booking")
@@ -245,14 +256,54 @@ func AddBookingDB(r *http.Request) error {
 
 	// Структура бронирования
 	booking := map[string]interface{}{
-		"client_id":    clientObjID,
-		"tariff_id":    tariffObjID,
-		"booking_date": bookingDate,
-		"booking_time": timeSlot,
+		"client_id":     clientObjID,
+		"tariff_id":     tariffObjID,
+		"general_games": generalGames,
+		"booking_date":  bookingDate,
+		"booking_time":  timeSlot,
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	_, err = collection.InsertOne(ctx, booking)
 	return err
+}
+
+func AddGeneralGameDB(r *http.Request) error {
+	// Получаем параметры формы
+	name := r.FormValue("name")
+	genre := r.FormValue("genre")
+
+	// Проверяем, заполнены ли все поля
+	if name == "" || genre == "" {
+		return fmt.Errorf("all fields are required")
+	}
+
+	// Подключение к базе данных MongoDB
+	db := MongoClient.Database("Vr")
+	collection := db.Collection("Games")
+
+	// Проверяем, существует ли игра с таким именем
+	filter := bson.M{"name": name}
+	count, err := collection.CountDocuments(context.TODO(), filter)
+	if err != nil {
+		return fmt.Errorf("error checking existing game: %v", err)
+	}
+	if count > 0 {
+		return fmt.Errorf("game with this name already exists")
+	}
+
+	// Создаём структуру общей игры
+	generalGame := GeneralGame{
+		Name:  name,
+		Genre: genre,
+	}
+
+	// Вставляем общую игру в базу данных
+	_, err = collection.InsertOne(context.TODO(), generalGame)
+	if err != nil {
+		return fmt.Errorf("error adding new general game: %v", err)
+	}
+
+	return nil
 }

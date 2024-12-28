@@ -366,3 +366,60 @@ func EditBookingDB(r *http.Request) error {
 
 	return nil
 }
+
+func EditGeneralGameDB(r *http.Request) error {
+	var (
+		generalGameId, name, genre string
+		objectGeneralGameId        primitive.ObjectID
+		err                        error
+	)
+
+	generalGameId = r.URL.Query().Get("id")
+	name = r.FormValue("name")
+	genre = r.FormValue("genre")
+
+	if generalGameId == "" || name == "" || genre == "" {
+		return fmt.Errorf("missing required parameters")
+	}
+
+	// Конвертация generalGameId в ObjectID
+	objectGeneralGameId, err = primitive.ObjectIDFromHex(generalGameId)
+	if err != nil {
+		return fmt.Errorf("error converting general game ID to ObjectID: %v", err)
+	}
+
+	// Обновление данных клиента
+	db := MongoClient.Database("Vr")
+	collection := db.Collection("Games")
+
+	// Проверка существования другой игры с таким же именем
+	filter := bson.M{
+		"_id":  bson.M{"$ne": objectGeneralGameId}, // Исключаем текущую игру
+		"name": name,                               // Проверяем по имени
+	}
+	count, err := collection.CountDocuments(context.TODO(), filter)
+	if err != nil {
+		return fmt.Errorf("error checking if game name exists: %v", err)
+	}
+	if count > 0 {
+		return fmt.Errorf("game with this name already exists")
+	}
+
+	update := bson.M{
+		"$set": bson.M{
+			"name":  name,
+			"genre": genre,
+		},
+	}
+
+	_, err = collection.UpdateOne(
+		context.TODO(),
+		bson.M{"_id": objectGeneralGameId},
+		update,
+	)
+	if err != nil {
+		return fmt.Errorf("error updating general game: %v", err)
+	}
+
+	return nil
+}

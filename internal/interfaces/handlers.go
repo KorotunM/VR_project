@@ -28,6 +28,11 @@ func AdminPage(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Error receiving bookings: %v", err)
 		return
 	}
+	generalGames, err := database.GetAllGeneralGames()
+	if err != nil {
+		fmt.Fprintf(w, "Error receiving general games: %v", err)
+		return
+	}
 	adminPageData.Statistic, err = database.GetBookingStatistics()
 	if err != nil {
 		fmt.Fprintf(w, "Error getting statistic: %v", err)
@@ -46,17 +51,28 @@ func AdminPage(w http.ResponseWriter, r *http.Request) {
 	adminPageData.Clients = clients
 	adminPageData.Tariffs = tariffs
 	adminPageData.Bookings = bookings
+	adminPageData.GeneralGames = generalGames
 
-	// заполнение имен клиентов и названий тарифов
+	// заполнение имен клиентов, названий тарифов и названий общих игр
 	for i := range adminPageData.Bookings {
 		for j := range adminPageData.Clients {
 			if adminPageData.Bookings[i].ClientID == adminPageData.Clients[j].Id {
 				adminPageData.Bookings[i].ClientName = adminPageData.Clients[j].Name
+				break
 			}
 		}
 		for j := range adminPageData.Tariffs {
 			if adminPageData.Bookings[i].TariffID == adminPageData.Tariffs[j].Id {
 				adminPageData.Bookings[i].TariffName = adminPageData.Tariffs[j].Name
+				break
+			}
+		}
+		for j := range adminPageData.Bookings[i].GeneralGames {
+			for k := range adminPageData.GeneralGames {
+				if adminPageData.Bookings[i].GeneralGames[j].Id == adminPageData.GeneralGames[k].Id {
+					adminPageData.Bookings[i].GeneralGames[j].Name = adminPageData.GeneralGames[k].Name
+					break
+				}
 			}
 		}
 	}
@@ -457,8 +473,13 @@ func AddBookingPage(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Error getting all clients: %v", err)
 		return
 	}
-
 	answer.Clients = clients
+
+	answer.GeneralGames, err = database.GetAllGeneralGames()
+	if err != nil {
+		fmt.Fprintf(w, "Error getting all general games: %v", err)
+		return
+	}
 
 	answer.AvailableTimes = []string{"10:00", "12:00", "14:00", "16:00", "18:00", "20:00"}
 
@@ -518,6 +539,66 @@ func AdminLoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	err = tmp.Execute(w, nil)
+	if err != nil {
+		fmt.Fprintf(w, "Error rendering template: %v", err)
+		return
+	}
+}
+
+func AddGeneralGamePage(w http.ResponseWriter, r *http.Request) {
+	var (
+		answer database.AdminFormGeneralGame
+		err    error
+	)
+	if r.Method == http.MethodPost {
+		answer.Validation, err = services.AddGeneralGame(w, r)
+		if err != nil {
+			fmt.Fprintf(w, "Error adding general game: %v", err)
+			return
+		}
+	}
+	answer.Action = "Добавить"
+	tmp, err := template.ParseFiles("../web/templates/admin/formGeneralGame.html")
+	if err != nil {
+		fmt.Fprintf(w, "Error loading template: %v", err)
+		return
+	}
+	err = tmp.Execute(w, answer)
+	if err != nil {
+		fmt.Fprintf(w, "Error rendering template: %v", err)
+		return
+	}
+}
+
+func EditGeneralGamePage(w http.ResponseWriter, r *http.Request) {
+	var (
+		answer database.AdminFormGeneralGame
+		err    error
+	)
+
+	answer.Game.Name = r.URL.Query().Get("name")
+	answer.Game.Genre = r.URL.Query().Get("genre")
+
+	if answer.Game.Name == "" || answer.Game.Genre == "" {
+		fmt.Fprintf(w, "Error getting parameters from URL")
+		return
+	}
+
+	answer.Action = "Редактировать"
+
+	if r.Method == http.MethodPost {
+		answer.Validation, err = services.EditGeneralGame(w, r)
+		if err != nil {
+			fmt.Fprintf(w, "Error editing general game: %v", err)
+			return
+		}
+	}
+	tmp, err := template.ParseFiles("../web/templates/admin/formGeneralGame.html")
+	if err != nil {
+		fmt.Fprintf(w, "Error loading template: %v", err)
+		return
+	}
+	err = tmp.Execute(w, answer)
 	if err != nil {
 		fmt.Fprintf(w, "Error rendering template: %v", err)
 		return

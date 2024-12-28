@@ -28,17 +28,33 @@ form input[type="date"],
 .select-clients {
     width: 96%;
     padding: 2%;
-    margin-bottom: 20px;
     border: 1px solid #3b3f5e;
     background-color: #1e1e3f;
     color: #ffffff;
     border-radius: 5px;
+    margin-bottom: 20px;
     font-size: 16px;
 }
 .select-tariffs,
 .select-time,
 .select-clients {
     width: 100%;
+}
+
+.dropdown-button:hover,
+.select-tariffs:hover,
+.select-time:hover,
+.select-clients:hover{
+    cursor: pointer;
+    background-color: #24244a;
+}
+
+.dropdown-button:focus,
+.select-tariffs:focus,
+.select-time:focus,
+.select-clients:focus{
+    border-color: #3a3af0;
+    background-color: #24244a;
 }
 
 form input[type="text"]:focus,
@@ -56,7 +72,7 @@ form .button-container {
 }
 
 /* Кнопка */
-form button {
+.submit-button {
     width: 30%;
     background-color: #19199a; /* Голубая кнопка */
     color: #ffffff;
@@ -67,7 +83,7 @@ form button {
     border-radius: 5px;
 }
 
-form button:hover {
+.submit-button:hover {
     background-color: #1f1fab;
 }
 
@@ -77,3 +93,67 @@ form button:hover {
     margin: 0;
     text-align: center;
 }
+
+/* для выпадающего списка с множественным выбором с галочками для формы бронирований для выбора общих игр */
+
+/* Контейнер выпадающего окна */
+.dropdown-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+/* Кнопка для открытия выпадающего окна */
+.dropdown-button {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #3b3f5e;
+    background-color: #1e1e3f;
+    color: #ffffff;
+    text-align: left;
+    border-radius: 4px;
+    font-size: 16px;
+    padding: 2%;
+}
+
+/* Список выпадающих элементов */
+.dropdown-list {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #3b3f5e;
+    background-color: #1e1e3f;
+    z-index: 1000;
+    border-radius: 4px;
+}
+
+/* Элементы списка */
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 1.4%;
+    cursor: pointer;
+}
+
+.dropdown-item:hover {
+    background-color: #2d2d5b;
+}
+
+/* Скрываем стандартный чекбокс */
+.dropdown-item input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+/* Отмеченные элементы */
+.dropdown-item input[type="checkbox"]:checked + label {
+    font-weight: bold;
+}
+
+/*  */
+

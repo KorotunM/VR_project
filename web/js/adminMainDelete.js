@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const deleteButton = document.getElementById("delete-button");
     let selectedRow = null; // Текущая выбранная строка
     let selectedId = ""; // Id выбранной записи
-    let selectedType = ""; // Тип записи: "client" или "booking"
+    let selectedType = ""; // Тип записи: "client" или "booking" или "general-game"
 
     rows.forEach(row => {
         row.addEventListener("click", function () {
@@ -31,6 +31,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     selectedType = "client";
                 } else if (parentSection.id === "bookings") {
                     selectedType = "booking";
+                }else if (parentSection.id === "general-games") {
+                    selectedType = "general-game";
                 }
             }
 
@@ -51,7 +53,16 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!confirmDelete) return;
 
         // Формируем URL на основе типа записи
-        const baseUrl = selectedType === "client" ? "/admin/client/delete" : "/admin/booking/delete";
+        let baseUrl = ""
+        if (selectedType === "client") {
+            baseUrl = "/admin/client/delete";
+        } else if (selectedType === "booking") {
+            baseUrl = "/admin/booking/delete";
+        } else if (selectedType === "general-game") {
+            baseUrl = "/admin/general-game/delete";
+        } else {
+            return;
+        }
         window.location.href = `${baseUrl}?id=${encodeURIComponent(selectedId)}`;
     });
 });

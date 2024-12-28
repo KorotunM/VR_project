@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../../../web/css/admin.css">
     <link rel="stylesheet" href="../../../web/css/actionforms.css">
 
-    <title>{{.Action}} клиента</title>
+    <title>{{.Action}} общую игру</title>
 </head>
 <body>
     <div class="admin-container">
@@ -17,19 +17,20 @@
             </ul>
             <div class="sidebar-buttons">
             </div>
-            <a class="sidebar-back-button" href="/admin#clients">Отмена</a>
+            <a class="sidebar-back-button" href="/admin#general-games">Отмена</a>
         </div>
         <header class="header-container">
-            <h1>{{.Action}} клиента</h1>
+            <h1>{{.Action}} общую игру</h1>
         </header>
         <main>
+            {{if .Validation}}
+            <p class="validation-text">{{.Validation}}</p>
+            {{end}}
             <form action="#" method="POST">
-                <label for="name">ФИО клиента:</label>
-                <input type="text" id="name" name="name" value="{{if .Name}}{{.Name}}{{end}}" required />
-                <label for="phone">Номер телефона клиента:</label>
-                <input type="text" id="phone" name="phone" value="{{if .Phone}}{{.Phone}}{{end}}" required />
-                <label for="price">Email клиента:</label>
-                <input type="email" id="email" name="email" value="{{if .Email}}{{.Email}}{{end}}" required />
+                <label for="name">Название игры:</label>
+                <input type="text" id="name" name="name" value="{{if .Game.Name}}{{.Game.Name}}{{end}}" required />
+                <label for="phone">Жанр игры:</label>
+                <input type="text" id="genre" name="genre" value="{{if .Game.Genre}}{{.Game.Genre}}{{end}}" required />
                 <div class="button-container">
                     <button class="submit-button" type="submit">{{.Action}}</button>
                 </div>

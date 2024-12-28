@@ -85,12 +85,17 @@ header h1 {
     border-radius: 5px;
 }
 
-.sidebar-action-button:hover, .sidebar-back-button:hover, .sidebar-tariff-button:hover {
+.sidebar-action-button:hover, .sidebar-tariff-button:hover {
     background-color: #45457e;
 }
 
 .sidebar-back-button {
     margin-bottom: 20%;
+    background-color: #19199a;
+}
+
+.sidebar-back-button:hover {
+    background-color: #1f1fab;
 }
 
 /* Неактивная кнопка */
