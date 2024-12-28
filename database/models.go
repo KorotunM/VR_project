@@ -64,16 +64,17 @@ type AdminFormClient struct {
 }
 
 type AdminFormBooking struct {
-	Action         string
-	ClientName     string
-	Clients        []Client
-	TariffName     string
-	Tariffs        []TariffTitle
-	GeneralGames   []GeneralGame
-	BookingDate    string
-	BookingTime    string
-	AvailableTimes []string
-	Validation     string
+	Action                   string
+	ClientName               string
+	Clients                  []Client
+	TariffName               string
+	Tariffs                  []TariffTitle
+	GeneralGames             []GeneralGame
+	SelectedGeneralGamesName []string
+	BookingDate              string
+	BookingTime              string
+	AvailableTimes           []string
+	Validation               string
 }
 
 type BookingDocument struct {

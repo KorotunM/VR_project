@@ -316,6 +316,17 @@ func EditBookingDB(r *http.Request) error {
 		return fmt.Errorf("error parsing booking date: %v", err)
 	}
 
+	// Обработка поля general_games
+	generalGameIDs := r.Form["general-games"] // Получаем массив значений из формы
+	var generalGames []bson.M                 // Массив для объектов с _id
+	for _, gameID := range generalGameIDs {
+		gameObjID, err := primitive.ObjectIDFromHex(gameID)
+		if err != nil {
+			return fmt.Errorf("error converting general game ID to ObjectID: %v", err)
+		}
+		generalGames = append(generalGames, bson.M{"_id": gameObjID})
+	}
+
 	// Подключаемся к базе данных
 	db := MongoClient.Database("Vr")
 	collection := db.Collection("Booking")
@@ -344,10 +355,11 @@ func EditBookingDB(r *http.Request) error {
 	// Структура обновления
 	update := bson.M{
 		"$set": bson.M{
-			"client_id":    clientObjID,
-			"tariff_id":    tariffObjID,
-			"booking_date": bookingDate,
-			"booking_time": timeSlot,
+			"client_id":     clientObjID,
+			"tariff_id":     tariffObjID,
+			"general_games": generalGames,
+			"booking_date":  bookingDate,
+			"booking_time":  timeSlot,
 		},
 	}
 

@@ -32,7 +32,7 @@
                 <!-- Выбор клиента -->
                 <label for="client">Клиент:</label>
                 <select class="select-clients" id="client" name="client" required>
-                    <option value=""></option>
+                    <option value="">Выберите клиента...</option>
                     {{range .Clients}}
                         <option value="{{.Id}}" {{if eq .Name $.ClientName}}selected{{end}}>{{.Name}}</option>
                     {{end}}
@@ -41,7 +41,7 @@
                 <!-- Тариф -->
                 <label for="tariff">Тариф:</label>
                 <select class="select-tariffs" id="tariff" name="tariff" required>
-                    <option value=""></option>
+                    <option value="">Выберите тариф...</option>
                     {{range .Tariffs}}
                         <option value="{{.Id}}" {{if eq .Name $.TariffName}}selected{{end}}>{{.Name}}</option>
                     {{end}}
@@ -50,11 +50,21 @@
                 <!-- Выбор общих игр -->
                 <label for="general-games">Общие игры:</label>
                 <div class="dropdown-container">
-                    <button type="button" class="dropdown-button" onclick="toggleDropdown()">Выберите общие игры (необязательно)</button>
+                    <button type="button" class="dropdown-button" onclick="toggleDropdown()">
+                        {{if ne (len .SelectedGeneralGamesName) 0}}
+                            Выбрано игр: {{len .SelectedGeneralGamesName}}
+                        {{else}}
+                            Выберите общие игры (необязательно)...
+                        {{end}}
+                    </button>
                     <div class="dropdown-list" id="dropdown-general-games">
                         {{range .GeneralGames}}
+                            {{$Name := .Name}}
                             <label class="dropdown-item">
-                                <input type="checkbox" name="general-games" value="{{.Id}}">
+                                <input type="checkbox" name="general-games" value="{{.Id}}"
+                                {{range $.SelectedGeneralGamesName}}
+                                    {{if eq . $Name}}checked{{end}}
+                                {{end}}>
                                 {{.Name}}
                             </label>
                         {{end}}
@@ -69,7 +79,7 @@
                 <label for="time">Время бронирования:</label>
 
                 <select class="select-time" id="time" name="time" required>
-                    <option value=""></option>
+                    <option value="">Выберите время...</option>
                     {{range .AvailableTimes}}
                         <option value="{{.}}" {{if eq . $.BookingTime}}selected{{end}}>{{.}}</option>
                     {{end}}

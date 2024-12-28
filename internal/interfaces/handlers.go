@@ -392,40 +392,35 @@ func EditClientPage(w http.ResponseWriter, r *http.Request) {
 
 func EditBookingPage(w http.ResponseWriter, r *http.Request) {
 	var (
-		answer               database.AdminFormBooking
-		client, tariff, date string
-		time                 string
-		err                  error
-		tariffs              []database.TariffTitle
-		clients              []database.Client
+		answer database.AdminFormBooking
+		err    error
 	)
 
-	client = r.URL.Query().Get("client")
-	tariff = r.URL.Query().Get("tariff")
-	date = r.URL.Query().Get("date")
-	time = r.URL.Query().Get("time")
+	answer.ClientName = r.URL.Query().Get("client")
+	answer.TariffName = r.URL.Query().Get("tariff")
+	answer.BookingDate = r.URL.Query().Get("date")
+	answer.BookingTime = r.URL.Query().Get("time")
+	answer.SelectedGeneralGamesName = r.URL.Query()["games[]"]
 
 	answer.Action = "Редактировать"
-	answer.ClientName = client
-	answer.TariffName = tariff
-	answer.BookingDate = date
-	answer.BookingTime = time
 
-	tariffs, err = database.GetAllTariffs()
+	answer.Tariffs, err = database.GetAllTariffs()
 	if err != nil {
 		fmt.Fprintf(w, "Error getting all tariffs: %v", err)
 		return
 	}
 
-	answer.Tariffs = tariffs
-
-	clients, err = database.GetClients()
+	answer.Clients, err = database.GetClients()
 	if err != nil {
 		fmt.Fprintf(w, "Error getting all clients: %v", err)
 		return
 	}
 
-	answer.Clients = clients
+	answer.GeneralGames, err = database.GetAllGeneralGames()
+	if err != nil {
+		fmt.Fprintf(w, "Error getting all general games: %v", err)
+		return
+	}
 
 	answer.AvailableTimes = []string{"10:00", "12:00", "14:00", "16:00", "18:00", "20:00"}
 
