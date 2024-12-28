@@ -72,10 +72,20 @@ func DeleteTariffDB(tariffId string) error {
 
 	// Подключаемся к базе данных
 	db := MongoClient.Database("Vr")
-	collection := db.Collection("Tariffs")
+	collectionTariffs := db.Collection("Tariffs")
+	collectionBookings := db.Collection("Booking")
 
-	// Удаляем тариф с указанным ID
-	_, err = collection.DeleteOne(context.TODO(), bson.M{"_id": objectTariffId})
+	// Найдём бронирования, связанные с тарифом
+	filterBookings := bson.M{"tariff_id": objectTariffId}
+
+	// Удаляем все бронирования, связанные с тарифом
+	_, err = collectionBookings.DeleteMany(context.TODO(), filterBookings)
+	if err != nil {
+		return fmt.Errorf("error deleting bookings linked to the tariff: %v", err)
+	}
+
+	// Удаляем сам тариф
+	_, err = collectionTariffs.DeleteOne(context.TODO(), bson.M{"_id": objectTariffId})
 	if err != nil {
 		return fmt.Errorf("error deleting tariff: %v", err)
 	}
@@ -88,19 +98,32 @@ func DeleteClientDB(r *http.Request) error {
 	if id == "" {
 		return fmt.Errorf("missing client ID")
 	}
+
+	// Конвертируем ID клиента в ObjectID
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return fmt.Errorf("invalid client ID: %v", err)
 	}
 
+	// Подключаемся к базе данных
 	db := MongoClient.Database("Vr")
-	collection := db.Collection("Clients")
+	clientsCollection := db.Collection("Clients")
+	bookingsCollection := db.Collection("Booking")
 
-	filter := bson.M{"_id": objectId}
-	_, err = collection.DeleteOne(context.TODO(), filter)
+	// Удаляем клиента
+	clientFilter := bson.M{"_id": objectId}
+	_, err = clientsCollection.DeleteOne(context.TODO(), clientFilter)
 	if err != nil {
 		return fmt.Errorf("error deleting client from database: %v", err)
 	}
+
+	// Удаляем связанные бронирования
+	bookingsFilter := bson.M{"client_id": objectId}
+	_, err = bookingsCollection.DeleteMany(context.TODO(), bookingsFilter)
+	if err != nil {
+		return fmt.Errorf("error deleting related bookings: %v", err)
+	}
+
 	return nil
 }
 

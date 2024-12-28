@@ -112,23 +112,28 @@ func AddDeviceDB(r *http.Request) (string, error) {
 
 func AddTariffDB(r *http.Request) error {
 	var (
-		tariff Tariff
-		name   string
-		price  int = -1
+		tariff    Tariff
+		name      string
+		price     int = -1
+		priceGame int = -1
 	)
 
 	// Получаем параметры формы
 	name = r.FormValue("name")
 	price, err := strconv.Atoi(r.FormValue("price"))
 	if err != nil {
-		return fmt.Errorf("error converting string to int")
+		return fmt.Errorf("error converting string to int (price)")
+	}
+	priceGame, err = strconv.Atoi(r.FormValue("price_game"))
+	if err != nil {
+		return fmt.Errorf("error converting string to int (price game)")
 	}
 
 	// Проверяем, заполнены ли все поля
 	if name == "" {
 		return fmt.Errorf("error: name is required")
 	}
-	if price <= 0 {
+	if price <= 0 || priceGame <= 0 {
 		return fmt.Errorf("wrong price")
 	}
 
@@ -148,10 +153,11 @@ func AddTariffDB(r *http.Request) error {
 
 	// Создаем новый тариф
 	tariff = Tariff{
-		Name:    name,
-		Price:   price,
-		Games:   []Game{},   // Пустой массив для игр
-		Devices: []Device{}, // Пустой массив для устройств
+		Name:      name,
+		Price:     price,
+		PriceGame: priceGame,
+		Games:     []Game{},   // Пустой массив для игр
+		Devices:   []Device{}, // Пустой массив для устройств
 	}
 
 	// Вставляем тариф в базу данных
@@ -297,6 +303,9 @@ func AddGeneralGameDB(r *http.Request) error {
 	intPrice, err := strconv.Atoi(price)
 	if err != nil {
 		return fmt.Errorf("error converting game's price: %v", err)
+	}
+	if intPrice <= 0 {
+		return fmt.Errorf("wrong price")
 	}
 
 	// Создаём структуру общей игры

@@ -284,19 +284,24 @@ func EditTariffPage(w http.ResponseWriter, r *http.Request) {
 		answer                     database.AdminFormTariff
 		validation, name, tariffId string
 		err                        error
-		price                      int
+		price, priceGame           int
 	)
 
 	name = r.URL.Query().Get("name")
 	tariffId = r.URL.Query().Get("id")
 	price, err = strconv.Atoi(r.URL.Query().Get("price"))
+	if err != nil {
+		fmt.Fprintf(w, "Error getting tariff price from URL")
+		return
+	}
+	priceGame, err = strconv.Atoi(r.URL.Query().Get("price_game"))
+	if err != nil {
+		fmt.Fprintf(w, "Error getting game price from URL")
+		return
+	}
 
 	if name == "" || tariffId == "" {
 		fmt.Fprintf(w, "Error getting string parameters from URL")
-		return
-	}
-	if err != nil {
-		fmt.Fprintf(w, "Error getting tariff price from URL")
 		return
 	}
 
@@ -304,6 +309,7 @@ func EditTariffPage(w http.ResponseWriter, r *http.Request) {
 	answer.Action = "Редактировать"
 	answer.Name = name
 	answer.Price = price
+	answer.PriceGame = priceGame
 
 	if r.Method == http.MethodPost {
 		validation, err = services.EditTariff(w, r)

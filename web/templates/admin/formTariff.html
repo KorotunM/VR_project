@@ -31,6 +31,8 @@
                 <input type="text" id="name" name="name" value="{{if .Name}}{{.Name}}{{end}}" required />
                 <label for="price">Цена тарифа:</label>
                 <input type="number" id="price" name="price" value="{{if .Price}}{{.Price}}{{end}}" required />
+                <label for="price">Цена одной игры:</label>
+                <input type="number" id="price_game" name="price_game" value="{{if .PriceGame}}{{.PriceGame}}{{end}}" required />
                 <div class="button-container">
                     <button class="submit-button" type="submit">{{.Action}}</button>
                 </div>

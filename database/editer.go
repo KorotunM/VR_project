@@ -165,21 +165,29 @@ func EditDeviceDB(r *http.Request) (string, error) {
 
 func EditTariffDB(r *http.Request) (string, error) {
 	var (
-		tariffId, name string
-		objectTariffId primitive.ObjectID
-		err            error
-		price          int
+		tariffId, name   string
+		objectTariffId   primitive.ObjectID
+		err              error
+		price, priceGame int
 	)
 
 	tariffId = r.URL.Query().Get("id")
 	name = r.FormValue("name")
 	price, err = strconv.Atoi(r.FormValue("price"))
+	if err != nil {
+		return "", fmt.Errorf("missing price parameters from URL: %v", err)
+	}
+	priceGame, err = strconv.Atoi(r.FormValue("price_game"))
+	if err != nil {
+		return "", fmt.Errorf("missing price game parameters from URL: %v", err)
+	}
 
 	if tariffId == "" || name == "" {
 		return "", fmt.Errorf("missing required string parameters from URL")
 	}
-	if err != nil {
-		return "", fmt.Errorf("missing price parameters from URL: %v", err)
+
+	if price <= 0 || priceGame <= 0 {
+		return "", fmt.Errorf("wrong price")
 	}
 
 	// Конвертация tariffId в ObjectID
@@ -207,8 +215,9 @@ func EditTariffDB(r *http.Request) (string, error) {
 	// Обновление данных тарифа
 	update := bson.M{
 		"$set": bson.M{
-			"name":  name,
-			"price": price,
+			"name":       name,
+			"price":      price,
+			"price_game": priceGame,
 		},
 	}
 
@@ -421,6 +430,10 @@ func EditGeneralGameDB(r *http.Request) error {
 	intPrice, err := strconv.Atoi(price)
 	if err != nil {
 		return fmt.Errorf("error converting game's price: %v", err)
+	}
+
+	if intPrice <= 0 {
+		return fmt.Errorf("wrong price")
 	}
 
 	update := bson.M{

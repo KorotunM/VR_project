@@ -104,6 +104,8 @@ func EditTariff(w http.ResponseWriter, r *http.Request) (string, error) {
 	if err != nil {
 		if err.Error() == "tariff with this name already exists" {
 			return "Тариф с таким именем уже существует", nil
+		} else if err.Error() == "wrong price" {
+			return "Неправильная цена", nil
 		}
 		return "", fmt.Errorf("error editing tariff: %v", err)
 	}
@@ -213,6 +215,8 @@ func AddGeneralGame(w http.ResponseWriter, r *http.Request) (string, error) {
 	if err != nil {
 		if err.Error() == "game with this name already exists" {
 			return "Игра с таким названием уже есть", nil
+		} else if err.Error() == "wrong price" {
+			return "Неправильная цена", nil
 		}
 		return "", fmt.Errorf("error adding general game: %v", err)
 	}
@@ -225,6 +229,8 @@ func EditGeneralGame(w http.ResponseWriter, r *http.Request) (string, error) {
 	if err != nil {
 		if err.Error() == "game with this name already exists" {
 			return "Игра с таким названием уже есть", nil
+		} else if err.Error() == "wrong price" {
+			return "Неправильная цена", nil
 		}
 		return "", fmt.Errorf("error editing general game: %v", err)
 	}

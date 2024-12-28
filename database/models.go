@@ -24,11 +24,12 @@ type TariffTitle struct {
 }
 
 type Tariff struct {
-	Id      string   `bson:"_id,omitempty"`
-	Name    string   `bson:"name"`
-	Price   int      `bson:"price"`
-	Games   []Game   `bson:"games"`
-	Devices []Device `bson:"devices"`
+	Id        string   `bson:"_id,omitempty"`
+	Name      string   `bson:"name"`
+	Price     int      `bson:"price"`
+	PriceGame int      `bson:"price_game"`
+	Games     []Game   `bson:"games"`
+	Devices   []Device `bson:"devices"`
 }
 
 type Game struct {
@@ -54,6 +55,7 @@ type AdminFormTariff struct {
 	Genre      string
 	Platform   string
 	Price      int
+	PriceGame  int
 }
 
 type AdminFormClient struct {
