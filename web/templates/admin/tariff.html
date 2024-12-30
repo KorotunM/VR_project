@@ -21,7 +21,7 @@
             </ul>
             <div class="sidebar-buttons">
                 <a class="sidebar-tariff-button" href="/admin/tariff/edit?id={{.Id}}&name={{.Name}}&price={{.Price}}&price_game={{.PriceGame}}">Изменить тариф</a>
-                <a class="sidebar-tariff-button" href="/admin/tariff/delete?id={{.Id}}" onclick="return confirm('Вы уверены, что хотите удалить этот тариф?');">Удалить тариф</a>
+                <a class="sidebar-tariff-button" href="/admin/tariff/delete?id={{.Id}}" onclick="return confirm('Вы уверены, что хотите удалить этот тариф? Связанные с ним записи бронирования и общие игры также будут удалены.');">Удалить тариф</a>
             </div>
             <div class="sidebar-buttons">
                 <a id="edit-button" class="sidebar-action-button disabled" href="#">Изменить запись</a>

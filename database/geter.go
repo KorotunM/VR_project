@@ -38,8 +38,8 @@ func GetClients() ([]Client, error) {
 	return clients, nil
 }
 
-func GetAllTariffs() ([]TariffTitle, error) {
-	var tariffs []TariffTitle
+func GetAllTariffs() ([]Tariff, error) {
+	var tariffs []Tariff
 
 	// для автоматического выключения, если запрос завис
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -264,4 +264,53 @@ func GetAllGeneralGames() ([]GeneralGame, error) {
 	}
 
 	return generalGames, nil
+}
+
+// Обработчик получения списка игр, которых нет в тарифе
+func GetExcludedGames(tariffId primitive.ObjectID) ([]GeneralGame, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	db := MongoClient.Database("Vr")
+	tariffsCollection := db.Collection("Tariffs")
+
+	// Поиск тарифа по ObjectId
+	var tariff struct {
+		Games []struct {
+			Name  string `bson:"name"`
+			Genre string `bson:"genre"`
+		} `bson:"games"`
+	}
+	filter := bson.M{"_id": tariffId}
+	err := tariffsCollection.FindOne(ctx, filter).Decode(&tariff)
+	if err != nil {
+		return nil, fmt.Errorf("error finding tariff: %v", err)
+	}
+
+	excludedGameNames := make(map[string]struct{})
+	for _, game := range tariff.Games {
+		excludedGameNames[game.Name] = struct{}{}
+	}
+
+	gamesCollection := db.Collection("Games")
+	filter = bson.M{}
+	cursor, err := gamesCollection.Find(ctx, filter)
+	if err != nil {
+		return nil, fmt.Errorf("error searching general games: %v", err)
+	}
+	defer cursor.Close(ctx)
+
+	var allGames []GeneralGame
+	if err := cursor.All(ctx, &allGames); err != nil {
+		return nil, fmt.Errorf("error reading general games: %v", err)
+	}
+
+	var excludedGames []GeneralGame
+	for _, game := range allGames {
+		if _, exists := excludedGameNames[game.Name]; !exists {
+			excludedGames = append(excludedGames, game)
+		}
+	}
+
+	return excludedGames, nil
 }

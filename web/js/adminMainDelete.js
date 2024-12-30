@@ -48,17 +48,20 @@ document.addEventListener("DOMContentLoaded", function () {
     deleteButton.addEventListener("click", function () {
         if (!selectedRow || !selectedId || !selectedType) return;
 
-        // Подтверждение удаления
-        const confirmDelete = confirm("Вы уверены, что хотите удалить эту запись?");
-        if (!confirmDelete) return;
-
+        let confirmDelete
         // Формируем URL на основе типа записи
         let baseUrl = ""
         if (selectedType === "client") {
+            confirmDelete = confirm("Вы уверены, что хотите удалить этого клиента? Связанные с ним записи бронирования также будут удалены.");
+            if (!confirmDelete) return;
             baseUrl = "/admin/client/delete";
         } else if (selectedType === "booking") {
+            confirmDelete = confirm("Вы уверены, что хотите удалить эту запись бронирования?");
+            if (!confirmDelete) return;
             baseUrl = "/admin/booking/delete";
         } else if (selectedType === "general-game") {
+            confirmDelete = confirm("Вы уверены, что хотите удалить эту игру?");
+            if (!confirmDelete) return;
             baseUrl = "/admin/general-game/delete";
         } else {
             return;

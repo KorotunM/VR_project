@@ -4,7 +4,7 @@ import "time"
 
 type AdminPageData struct {
 	Clients       []Client
-	Tariffs       []TariffTitle
+	Tariffs       []Tariff
 	Bookings      []BookingDocument
 	Statistic     []TariffStats
 	StatisticDays []DailyStats
@@ -16,11 +16,6 @@ type Client struct {
 	Name  string `bson:"name"`
 	Phone string `bson:"phone number"`
 	Email string `bson:"email"`
-}
-
-type TariffTitle struct {
-	Id   string `bson:"_id"`
-	Name string `bson:"name"`
 }
 
 type Tariff struct {
@@ -70,7 +65,7 @@ type AdminFormBooking struct {
 	ClientName               string
 	Clients                  []Client
 	TariffName               string
-	Tariffs                  []TariffTitle
+	Tariffs                  []Tariff
 	GeneralGames             []GeneralGame
 	SelectedGeneralGamesName []string
 	BookingDate              string
@@ -89,6 +84,7 @@ type BookingDocument struct {
 	BookingDate  time.Time     `bson:"booking_date" json:"booking_date"` // Дата бронирования
 	Date         string
 	BookingTime  string `bson:"booking_time" json:"booking_time"` // Время бронирования
+	TotalPrice   int
 }
 type BookingRequest struct {
 	Name        string `json:"name"`

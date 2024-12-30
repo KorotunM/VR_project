@@ -53,7 +53,7 @@ func AdminPage(w http.ResponseWriter, r *http.Request) {
 	adminPageData.Bookings = bookings
 	adminPageData.GeneralGames = generalGames
 
-	// заполнение имен клиентов, названий тарифов и названий общих игр
+	// заполнение имен клиентов, названий тарифов, названий общих игр и общей цены
 	for i := range adminPageData.Bookings {
 		for j := range adminPageData.Clients {
 			if adminPageData.Bookings[i].ClientID == adminPageData.Clients[j].Id {
@@ -64,6 +64,7 @@ func AdminPage(w http.ResponseWriter, r *http.Request) {
 		for j := range adminPageData.Tariffs {
 			if adminPageData.Bookings[i].TariffID == adminPageData.Tariffs[j].Id {
 				adminPageData.Bookings[i].TariffName = adminPageData.Tariffs[j].Name
+				adminPageData.Bookings[i].TotalPrice += adminPageData.Tariffs[j].Price
 				break
 			}
 		}
@@ -71,6 +72,7 @@ func AdminPage(w http.ResponseWriter, r *http.Request) {
 			for k := range adminPageData.GeneralGames {
 				if adminPageData.Bookings[i].GeneralGames[j].Id == adminPageData.GeneralGames[k].Id {
 					adminPageData.Bookings[i].GeneralGames[j].Name = adminPageData.GeneralGames[k].Name
+					adminPageData.Bookings[i].TotalPrice += adminPageData.GeneralGames[k].Price
 					break
 				}
 			}

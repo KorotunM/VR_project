@@ -37,4 +37,5 @@ func HandlerPages() {
 	http.HandleFunc("/admin/general-game/add", AddGeneralGamePage)
 	http.HandleFunc("/admin/general-game/edit", EditGeneralGamePage)
 	http.HandleFunc("/admin/general-game/delete", services.DeleteGeneralGame)
+	http.HandleFunc("/admin/booking/edit/general-games", services.HandleExcludedGames)
 }

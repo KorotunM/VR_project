@@ -43,7 +43,7 @@
                 <select class="select-tariffs" id="tariff" name="tariff" required>
                     <option value="">Выберите тариф...</option>
                     {{range .Tariffs}}
-                        <option value="{{.Id}}" {{if eq .Name $.TariffName}}selected{{end}}>{{.Name}}</option>
+                        <option value="{{.Id}}" {{if eq .Name $.TariffName}}selected{{end}}>{{.Name}} ({{.Price}} руб.)</option>
                     {{end}}
                 </select>
 
@@ -65,7 +65,7 @@
                                 {{range $.SelectedGeneralGamesName}}
                                     {{if eq . $Name}}checked{{end}}
                                 {{end}}>
-                                {{.Name}}
+                                {{.Name}} ({{.Price}} руб.)
                             </label>
                         {{end}}
                     </div>

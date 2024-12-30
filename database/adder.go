@@ -14,25 +14,29 @@ import (
 func AddGameDB(r *http.Request) (string, error) {
 	var (
 		game                  Game
+		generalGame           GeneralGame
 		name, genre, tariffId string
 		objectTariffId        primitive.ObjectID
 	)
+
 	if r.Method != http.MethodPost {
-		return "", fmt.Errorf("error method")
+		return "", fmt.Errorf("error: invalid method")
 	}
 
+	// Получаем данные из формы
 	name = r.FormValue("name")
 	genre = r.FormValue("genre")
 
-	tariffId = r.URL.Query().Get("id")
-	if tariffId == "" {
-		return "", fmt.Errorf("error getting id tariff from URL")
+	// Проверяем, заполнены ли обязательные поля
+	if name == "" || genre == "" {
+		return "", fmt.Errorf("error: all fields are required")
 	}
 
-	game = Game{name, genre}
-
-	db := MongoClient.Database("Vr")
-	collection := db.Collection("Tariffs")
+	// Получаем ID тарифа из URL
+	tariffId = r.URL.Query().Get("id")
+	if tariffId == "" {
+		return "", fmt.Errorf("error: missing tariff ID in URL")
+	}
 
 	// Конвертация string в ObjectID
 	objectTariffId, err := primitive.ObjectIDFromHex(tariffId)
@@ -40,24 +44,62 @@ func AddGameDB(r *http.Request) (string, error) {
 		return "", fmt.Errorf("error converting tariff ID to ObjectID: %v", err)
 	}
 
-	// Проверяем, существует ли игра с таким именем
-	filter := bson.M{"_id": objectTariffId, "games": bson.M{"$elemMatch": bson.M{"name": name}}}
-	count, err := collection.CountDocuments(context.TODO(), filter)
+	// Подключение к базе данных
+	db := MongoClient.Database("Vr")
+	tariffsCollection := db.Collection("Tariffs")
+	gamesCollection := db.Collection("Games")
+
+	// Проверяем, существует ли игра с таким именем в тарифе
+	tariffFilter := bson.M{"_id": objectTariffId, "games": bson.M{"$elemMatch": bson.M{"name": name}}}
+	tariffGameCount, err := tariffsCollection.CountDocuments(context.TODO(), tariffFilter)
 	if err != nil {
-		return "", fmt.Errorf("error checking existing game: %v", err)
+		return "", fmt.Errorf("error checking existing game in tariff: %v", err)
 	}
-	if count > 0 {
+	if tariffGameCount > 0 {
 		return "", fmt.Errorf("game with this name already exists")
 	}
 
-	_, err = collection.UpdateOne(
+	// Извлекаем цену для игры из тарифа
+	var tariff struct {
+		PriceGame int `bson:"price_game"`
+	}
+	err = tariffsCollection.FindOne(context.TODO(), bson.M{"_id": objectTariffId}).Decode(&tariff)
+	if err != nil {
+		return "", fmt.Errorf("error retrieving tariff details: %v", err)
+	}
+
+	// Проверяем, существует ли игра с таким именем в общих играх
+	generalGameFilter := bson.M{"name": name}
+	update := bson.M{"$set": bson.M{"price": tariff.PriceGame, "genre": genre}}
+	result, err := gamesCollection.UpdateOne(context.TODO(), generalGameFilter, update)
+	if err != nil {
+		return "", fmt.Errorf("error updating general game: %v", err)
+	}
+
+	// Если игра не была найдена, добавляем новую
+	if result.MatchedCount == 0 {
+		generalGame = GeneralGame{
+			Name:  name,
+			Genre: genre,
+			Price: tariff.PriceGame,
+		}
+		_, err = gamesCollection.InsertOne(context.TODO(), generalGame)
+		if err != nil {
+			return "", fmt.Errorf("error adding game to general games: %v", err)
+		}
+	}
+
+	// Добавляем игру в коллекцию игр тарифа
+	game = Game{Name: name, Genre: genre}
+	_, err = tariffsCollection.UpdateOne(
 		context.TODO(),
 		bson.M{"_id": objectTariffId},
 		bson.M{"$push": bson.M{"games": game}},
 	)
 	if err != nil {
-		return "", fmt.Errorf("error adding new game: %v", err)
+		return "", fmt.Errorf("error adding game to tariff: %v", err)
 	}
+
 	return tariffId, nil
 }
 

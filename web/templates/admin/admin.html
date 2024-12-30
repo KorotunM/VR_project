@@ -105,27 +105,29 @@
                             <th class="table-body-cell">Количество общих игр</th>
                             <th class="table-body-cell">Дата бронирования</th>
                             <th class="table-body-cell">Время</th>
+                            <th class="table-body-cell">Итоговая цена</th>
                         </tr>
                     </thead>
                     <tbody>
                         {{range .Bookings}} 
-                        <tr class="table-body">
-                            <td class="table-body-cell hidden-id">{{.ID}}</td>
-                            <td class="table-body-cell hidden-id">{{.ClientID}}</td>
-                            <td class="table-body-cell">{{.ClientName}}</td>
-                            <td class="table-body-cell">{{.TariffName}}</td>
-                            <td class="table-body-cell hidden-id">
-                                {{range .GeneralGames}}
-                                    {{.Name}},
-                                {{end}}
-                            </td>
-                            <td class="table-body-cell">{{len .GeneralGames}}</td>
-                            <td class="table-body-cell">{{.Date}}</td>
-                            <td class="table-body-cell">{{.BookingTime}}</td>
-                        </tr>
+                            <tr class="table-body">
+                                <td class="table-body-cell hidden-id">{{.ID}}</td>
+                                <td class="table-body-cell hidden-id">{{.ClientID}}</td>
+                                <td class="table-body-cell">{{.ClientName}}</td>
+                                <td class="table-body-cell">{{.TariffName}}</td>
+                                <td class="table-body-cell hidden-id">
+                                    {{range .GeneralGames}}
+                                        {{.Name}},
+                                    {{end}}
+                                </td>
+                                <td class="table-body-cell">{{len .GeneralGames}}</td>
+                                <td class="table-body-cell">{{.Date}}</td>
+                                <td class="table-body-cell">{{.BookingTime}}</td>
+                                <td class="table-body-cell">{{.TotalPrice}}</td>
+                            </tr>
                         {{end}}
                         <tr class="add-row">
-                            <td class="table-body-button" colspan="5">
+                            <td class="table-body-button" colspan="6">
                                 <a href="/admin/booking/add" class="button">Добавить бронирование</a>
                             </td>
                         </tr>

@@ -13,18 +13,23 @@ import (
 
 func EditGameDB(r *http.Request) (string, error) {
 	var (
-		game                          Game
-		gameName, gameGenre, tariffId string
-		objectTariffId                primitive.ObjectID
+		oldGameName, oldGameGenre string
+		newGameName, newGameGenre string
+		tariffId                  string
+		objectTariffId            primitive.ObjectID
 	)
 
 	// Получаем параметры из URL
 	tariffId = r.URL.Query().Get("id")
-	gameName = r.URL.Query().Get("name")
-	gameGenre = r.URL.Query().Get("genre")
+	oldGameName = r.URL.Query().Get("name")   // Старое название игры
+	oldGameGenre = r.URL.Query().Get("genre") // Старый жанр игры
 
-	if tariffId == "" || gameName == "" || gameGenre == "" {
-		return "", fmt.Errorf("missing required parameters in URL")
+	// Получаем новые значения из формы
+	newGameName = r.FormValue("name")   // Новое название игры
+	newGameGenre = r.FormValue("genre") // Новый жанр игры
+
+	if tariffId == "" || oldGameName == "" || oldGameGenre == "" || newGameName == "" || newGameGenre == "" {
+		return "", fmt.Errorf("missing required parameters")
 	}
 
 	// Конвертируем tariffId в ObjectID
@@ -33,30 +38,25 @@ func EditGameDB(r *http.Request) (string, error) {
 		return "", fmt.Errorf("error converting tariff ID to ObjectID: %v", err)
 	}
 
-	// Создаем объект с новыми данными
-	game = Game{
-		Name:  r.FormValue("name"),  // Новое название игры
-		Genre: r.FormValue("genre"), // Новый жанр игры
-	}
-
 	// Подключаемся к базе данных
 	db := MongoClient.Database("Vr")
-	collection := db.Collection("Tariffs")
+	tariffsCollection := db.Collection("Tariffs")
+	gamesCollection := db.Collection("Games")
 
-	// Проверяем, не существует ли уже новая игра с таким же названием
+	// Проверяем, не существует ли уже игра с таким же новым названием в тарифе
 	newGameFilter := bson.M{
 		"_id": objectTariffId,
 		"games": bson.M{
 			"$elemMatch": bson.M{
-				"name": game.Name, // Проверка нового названия
+				"name": newGameName,
 			},
 		},
 	}
-	newGameCount, err := collection.CountDocuments(context.TODO(), newGameFilter)
+	newGameCount, err := tariffsCollection.CountDocuments(context.TODO(), newGameFilter)
 	if err != nil {
 		return "", fmt.Errorf("error checking if new game name exists: %v", err)
 	}
-	if game.Name == gameName {
+	if newGameName == oldGameName {
 		if newGameCount != 1 {
 			return "", fmt.Errorf("game with this name already exists or another error")
 		}
@@ -66,21 +66,43 @@ func EditGameDB(r *http.Request) (string, error) {
 		}
 	}
 
-	// Обновляем запись игры
+	// Обновляем игру в тарифе
 	update := bson.M{
 		"$set": bson.M{
-			"games.$.name":  game.Name,
-			"games.$.genre": game.Genre,
+			"games.$.name":  newGameName,
+			"games.$.genre": newGameGenre,
 		},
 	}
-
-	_, err = collection.UpdateOne(
+	_, err = tariffsCollection.UpdateOne(
 		context.TODO(),
-		bson.M{"_id": objectTariffId, "games.name": gameName, "games.genre": gameGenre},
+		bson.M{"_id": objectTariffId, "games.name": oldGameName},
 		update,
 	)
 	if err != nil {
-		return "", fmt.Errorf("error updating game: %v", err)
+		return "", fmt.Errorf("error updating game in tariff: %v", err)
+	}
+
+	// Извлекаем цену для игры из тарифа
+	var tariff struct {
+		PriceGame int `bson:"price_game"`
+	}
+	err = tariffsCollection.FindOne(context.TODO(), bson.M{"_id": objectTariffId}).Decode(&tariff)
+	if err != nil {
+		return "", fmt.Errorf("error retrieving tariff details: %v", err)
+	}
+
+	// Проверяем, существует ли игра с прежним названием в общих играх
+	generalGameFilter := bson.M{"name": oldGameName}
+	updateGeneralGame := bson.M{
+		"$set": bson.M{
+			"name":  newGameName,
+			"genre": newGameGenre,
+			"price": tariff.PriceGame, // Обновляем цену игры
+		},
+	}
+	_, err = gamesCollection.UpdateOne(context.TODO(), generalGameFilter, updateGeneralGame)
+	if err != nil {
+		return "", fmt.Errorf("error updating general game: %v", err)
 	}
 
 	// Возвращаем tariffId для редиректа
@@ -169,6 +191,12 @@ func EditTariffDB(r *http.Request) (string, error) {
 		objectTariffId   primitive.ObjectID
 		err              error
 		price, priceGame int
+		oldTariffData    struct {
+			PriceGame int `bson:"price_game"`
+			Games     []struct {
+				Name string `bson:"name"`
+			} `bson:"games"`
+		}
 	)
 
 	tariffId = r.URL.Query().Get("id")
@@ -196,20 +224,28 @@ func EditTariffDB(r *http.Request) (string, error) {
 		return "", fmt.Errorf("error converting tariff ID to ObjectID: %v", err)
 	}
 
-	// Проверка существования тарифа с таким именем
+	// Подключение к базе данных
 	db := MongoClient.Database("Vr")
-	collection := db.Collection("Tariffs")
+	collectionTariffs := db.Collection("Tariffs")
+	collectionGames := db.Collection("Games")
 
+	// Проверка существования тарифа с таким именем
 	filter := bson.M{
 		"_id":  bson.M{"$ne": objectTariffId}, // Исключить текущий тариф
 		"name": name,                          // Проверить по имени
 	}
-	count, err := collection.CountDocuments(context.TODO(), filter)
+	count, err := collectionTariffs.CountDocuments(context.TODO(), filter)
 	if err != nil {
 		return "", fmt.Errorf("error checking if tariff name exists: %v", err)
 	}
 	if count > 0 {
 		return "", fmt.Errorf("tariff with this name already exists")
+	}
+
+	// Получение старых данных тарифа
+	err = collectionTariffs.FindOne(context.TODO(), bson.M{"_id": objectTariffId}).Decode(&oldTariffData)
+	if err != nil {
+		return "", fmt.Errorf("error retrieving old tariff data: %v", err)
 	}
 
 	// Обновление данных тарифа
@@ -220,14 +256,27 @@ func EditTariffDB(r *http.Request) (string, error) {
 			"price_game": priceGame,
 		},
 	}
-
-	_, err = collection.UpdateOne(
+	_, err = collectionTariffs.UpdateOne(
 		context.TODO(),
 		bson.M{"_id": objectTariffId},
 		update,
 	)
 	if err != nil {
 		return "", fmt.Errorf("error updating tariff: %v", err)
+	}
+
+	// Если цена за игру изменилась, обновляем её в общих играх
+	if oldTariffData.PriceGame != priceGame {
+		for _, game := range oldTariffData.Games {
+			_, err = collectionGames.UpdateOne(
+				context.TODO(),
+				bson.M{"name": game.Name}, // Обновляем по названию игры
+				bson.M{"$set": bson.M{"price": priceGame}},
+			)
+			if err != nil {
+				return "", fmt.Errorf("error updating price for game '%s': %v", game.Name, err)
+			}
+		}
 	}
 
 	return tariffId, nil

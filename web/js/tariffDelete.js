@@ -45,15 +45,23 @@ document.addEventListener("DOMContentLoaded", function () {
     deleteButton.addEventListener("click", function () {
         if (!selectedRow) return;
 
-        // Показываем подтверждение удаления
-        const confirmDelete = confirm("Вы уверены, что хотите удалить эту запись?");
-        if (!confirmDelete) {
-            return; // Если пользователь нажал "Отмена", прекращаем выполнение
+        let confirmDelete
+        if (selectedType === "game") {
+            confirmDelete = confirm("Вы уверены, что хотите удалить эту игру из тарифа? Она также удалится в таблице общих игр и в выбранных общих играх в записях бронирований.");
+            if (!confirmDelete) {
+                return; // Если пользователь нажал "Отмена", прекращаем выполнение
+            }
+        } else if (selectedType === "device") {
+            confirmDelete = confirm("Вы уверены, что хотите удалить это устройство?");
+            if (!confirmDelete) {
+                return;
+            }
         }
+
+        
 
         // Сбор данных из выбранной строки
         const name = selectedRow.querySelector("td").textContent.trim(); // Имя игры или устройства
-
         // AJAX-запрос для удаления
         fetch(`/admin/tariff/delete/element?id=${tariffId}`, {
             method: "POST",

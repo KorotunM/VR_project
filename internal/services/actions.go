@@ -4,7 +4,10 @@ import (
 	"VR_project/database"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func DeleteElementTariff(w http.ResponseWriter, r *http.Request) {
@@ -251,4 +254,36 @@ func DeleteGeneralGame(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	http.Redirect(w, r, "/admin#general-games", http.StatusSeeOther)
+}
+
+func HandleExcludedGames(w http.ResponseWriter, r *http.Request) {
+	// Получаем tariffId из параметров запроса
+	tariffId := r.URL.Query().Get("tariffId")
+	if tariffId == "" {
+		http.Error(w, "Missing tariffId parameter", http.StatusBadRequest)
+		return
+	}
+
+	// Преобразуем tariffId в ObjectId
+	id, err := primitive.ObjectIDFromHex(tariffId)
+	if err != nil {
+		log.Printf("Error converting tariffId to ObjectId: %v", err)
+		http.Error(w, "Invalid tariffId format", http.StatusBadRequest)
+		return
+	}
+
+	// Получаем список исключённых игр
+	excludedGames, err := database.GetExcludedGames(id)
+	if err != nil {
+		log.Printf("Error getting excluded games: %v", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	// Отправляем JSON-ответ
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(excludedGames); err != nil {
+		log.Printf("Error encoding response: %v", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	}
 }
