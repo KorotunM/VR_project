@@ -8,15 +8,6 @@
 },
 {
   "_id": {
-    "$oid": "675b61194001d3e9c33e2722"
-  },
-  "name": "Терентий",
-  "phone number": "+77002341020",
-  "email": "pou@mail.ru",
-  "phone": "89898081491"
-},
-{
-  "_id": {
     "$oid": "67615e17491134d59ba86031"
   },
   "name": "Александр",
@@ -25,41 +16,25 @@
 },
 {
   "_id": {
-    "$oid": "6761ca048533fad20bd99c23"
-  },
-  "name": "Mixail",
-  "email": "loveWEB@mail.org",
-  "phone number": "+7 9898081491"
-},
-{
-  "_id": {
-    "$oid": "6761e4cf3975148cc02c28e9"
-  },
-  "phone number": "81488012932",
-  "name": "Александр",
-  "email": "frontcomplete@kaif.ru"
-},
-{
-  "_id": {
-    "$oid": "6761e62f3975148cc02c28eb"
-  },
-  "email": "Legend@mail.ru",
-  "phone number": "89898081491",
-  "name": "Leonid"
-},
-{
-  "_id": {
-    "$oid": "6761e6b1297801e7b653d6d5"
-  },
-  "name": "Шамиль",
-  "email": "xsusha03@gmail.com",
-  "phone number": "87002341021"
-},
-{
-  "_id": {
     "$oid": "6761e741297801e7b653d6d7"
   },
   "name": "Серёга",
   "email": "loveRAt@mail.org",
   "phone number": "88005553355"
+},
+{
+  "_id": {
+    "$oid": "676d76f811df704563baf2fa"
+  },
+  "name": "Leonid",
+  "phone number": "+79092130440",
+  "email": "hhru@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "677121d5f7593af97efc3ea6"
+  },
+  "name": "Иванов Алексей Викторович",
+  "phone number": "+79092130440",
+  "email": "blob45@mail.ru"
 }]

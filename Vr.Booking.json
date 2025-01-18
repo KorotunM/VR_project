@@ -1,90 +1,87 @@
 [{
   "_id": {
-    "$oid": "6761ca048533fad20bd99c24"
+    "$oid": "6772adcbea23eb1c2841c944"
   },
   "client_id": {
-    "$oid": "6761ca048533fad20bd99c23"
+    "$oid": "676d76f811df704563baf2fa"
   },
   "tariff_id": {
-    "$oid": "675bf10aa58d1368932c8974"
+    "$oid": "6772ad7eea23eb1c2841c941"
   },
+  "general_games": [
+    {
+      "_id": {
+        "$oid": "6772be0c0d400711466d5761"
+      }
+    }
+  ],
   "booking_date": {
-    "$date": "2024-12-18T00:00:00.000Z"
+    "$date": "2024-11-30T00:00:00.000Z"
   },
   "booking_time": "16:00"
 },
 {
   "_id": {
-    "$oid": "6761e082c133537ae0445dcc"
+    "$oid": "6772feee9e24884312fee339"
+  },
+  "client_id": {
+    "$oid": "676d76f811df704563baf2fa"
   },
   "tariff_id": {
-    "$oid": "675bf10aa58d1368932c8974"
+    "$oid": "6772ad7eea23eb1c2841c941"
   },
+  "general_games": [
+    {
+      "_id": {
+        "$oid": "677306aaad38c3dfdadce991"
+      }
+    }
+  ],
   "booking_date": {
     "$date": "2024-12-19T00:00:00.000Z"
   },
-  "booking_time": "14:00",
-  "client_id": {
-    "$oid": "6761d459f297618f61ef8937"
-  }
+  "booking_time": "16:00"
 },
 {
   "_id": {
-    "$oid": "6761e4cf3975148cc02c28ea"
+    "$oid": "67730768ad38c3dfdadce992"
   },
   "client_id": {
-    "$oid": "6761e4cf3975148cc02c28e9"
+    "$oid": "676d76f811df704563baf2fa"
   },
   "tariff_id": {
-    "$oid": "6761e9a2297801e7b653d6db"
+    "$oid": "6772ad7eea23eb1c2841c941"
   },
+  "general_games": null,
   "booking_date": {
-    "$date": "2024-12-20T00:00:00.000Z"
+    "$date": "2024-12-05T00:00:00.000Z"
   },
-  "booking_time": "20:00"
+  "booking_time": "18:00"
 },
 {
   "_id": {
-    "$oid": "6761e6b1297801e7b653d6d6"
+    "$oid": "6773077fad38c3dfdadce993"
+  },
+  "client_id": {
+    "$oid": "6761e741297801e7b653d6d7"
   },
   "tariff_id": {
-    "$oid": "6761e9a2297801e7b653d6db"
+    "$oid": "6772ad7eea23eb1c2841c941"
   },
+  "general_games": [
+    {
+      "_id": {
+        "$oid": "6772be0c0d400711466d5761"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "677306aaad38c3dfdadce991"
+      }
+    }
+  ],
   "booking_date": {
     "$date": "2024-12-18T00:00:00.000Z"
   },
-  "booking_time": "18:00",
-  "client_id": {
-    "$oid": "675b61194001d3e9c33e2722"
-  }
-},
-{
-  "_id": {
-    "$oid": "6761e741297801e7b653d6d8"
-  },
-  "tariff_id": {
-    "$oid": "6761e9a2297801e7b653d6db"
-  },
-  "booking_date": {
-    "$date": "2024-12-20T00:00:00.000Z"
-  },
-  "booking_time": "12:00",
-  "client_id": {
-    "$oid": "6761e741297801e7b653d6d7"
-  }
-},
-{
-  "_id": {
-    "$oid": "676228a44a10488d755ba467"
-  },
-  "tariff_id": {
-    "$oid": "6761b6efe9c2b87c1c75cf92"
-  },
-  "booking_date": {
-    "$date": "2024-12-21T00:00:00.000Z"
-  },
-  "booking_time": "16:00",
-  "client_id": {
-    "$oid": "6761ca048533fad20bd99c23"
-  }
+  "booking_time": "16:00"
 }]

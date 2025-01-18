@@ -1,155 +1,62 @@
 [{
   "_id": {
-    "$oid": "6761b6efe9c2b87c1c75cf92"
+    "$oid": "6772ad7eea23eb1c2841c941"
   },
-  "name": "Элитный",
-  "price": {
-    "$numberLong": "9999999999"
-  },
-  "games": [],
+  "name": "Базовый",
+  "price": 6000,
+  "price_game": 500,
+  "games": [
+    {
+      "name": "Subnautica",
+      "genre": "Исследование"
+    },
+    {
+      "name": "Prey",
+      "genre": "Шурер"
+    }
+  ],
   "devices": []
 },
 {
   "_id": {
-    "$oid": "675b61bc4001d3e9c33e2726"
-  },
-  "name": "Базовый",
-  "price": 3000,
-  "games": [
-    {
-      "name": "Dota 2",
-      "genre": "Шутер"
-    },
-    {
-      "name": "Darkest dungeon",
-      "genre": "Стратегия"
-    },
-    {
-      "name": "Terraria",
-      "genre": "Песочница"
-    }
-  ],
-  "devices": [
-    {
-      "name": "Компьютер 1",
-      "platform": "PC"
-    },
-    {
-      "name": "Компьютер 2",
-      "platform": "PC"
-    },
-    {
-      "name": "Мой ноут",
-      "platform": "Рабочая лошадка"
-    }
-  ]
-},
-{
-  "_id": {
-    "$oid": "675bf08ca58d1368932c8973"
+    "$oid": "67730ec9ad38c3dfdadce994"
   },
   "name": "Плюс",
-  "price": 6000,
+  "price": 25000,
+  "price_game": 1000,
   "games": [
-    {
-      "name": "Bioshock",
-      "genre": "Шутер"
-    },
-    {
-      "name": "Frostpunk",
-      "genre": "Стратегия"
-    }
-  ],
-  "devices": [
-    {
-      "name": "Компьютер 1",
-      "platform": "PC"
-    },
-    {
-      "name": "Компьютер 2",
-      "platform": "PC"
-    },
-    {
-      "name": "Vr очки",
-      "platform": "VR"
-    }
-  ]
-},
-{
-  "_id": {
-    "$oid": "675bf10aa58d1368932c8974"
-  },
-  "name": "Премиум",
-  "price": 10000,
-  "games": [
-    {
-      "name": "Bioshock",
-      "genre": "Шутер"
-    },
-    {
-      "name": "Darkest dungeon",
-      "genre": "Стратегия"
-    },
     {
       "name": "Dota 2",
       "genre": "Tower defence"
-    },
-    {
-      "name": "Subnautica",
-      "genre": "Выживание"
-    },
-    {
-      "name": "Dredge",
-      "genre": "Приключение"
-    },
-    {
-      "name": "Terraria",
-      "genre": "Песочница"
     }
   ],
-  "devices": [
-    {
-      "name": "Компьютер 1",
-      "platform": "PC"
-    },
-    {
-      "name": "Компьютер 2",
-      "platform": "PC"
-    },
-    {
-      "name": "Vr очки",
-      "platform": "VR"
-    },
-    {
-      "name": "Play station 5",
-      "platform": "PS"
-    }
-  ]
+  "devices": []
 },
 {
   "_id": {
-    "$oid": "6761e9a2297801e7b653d6db"
+    "$oid": "678b8c506289cd35170186cb"
   },
-  "name": "Чёрная Пятница",
-  "price": 2700,
+  "name": "Премиум",
+  "price": 20000,
+  "price_game": 2000,
   "games": [
     {
-      "name": "Minecraft",
-      "genre": "Landscape"
+      "name": "Шашки онлайн",
+      "genre": "Стратегия"
     },
     {
-      "name": "Five Nights at KUBGU",
-      "genre": "Horror"
+      "name": "Шахматы",
+      "genre": "Головоломка"
+    },
+    {
+      "name": "Five nights at KubGU",
+      "genre": "Хоррор"
     }
   ],
   "devices": [
     {
-      "name": "Oculus Quest 3",
-      "platform": "VR"
-    },
-    {
-      "name": "XREAL Air 2 Pro Beam Bundle, Smart AR Glasses, Hub Gaming Handheld",
-      "platform": "Glasses"
+      "name": "Очки vr",
+      "platform": "Рабочая лошадка"
     }
   ]
 }]

@@ -1,0 +1,48 @@
+[{
+  "_id": {
+    "$oid": "6772b19bbfe696c474917725"
+  },
+  "name": "Subnautica",
+  "genre": "Исследование",
+  "price": 500
+},
+{
+  "_id": {
+    "$oid": "6772be0c0d400711466d5761"
+  },
+  "name": "Dota 2",
+  "genre": "Tower defence",
+  "price": 1000
+},
+{
+  "_id": {
+    "$oid": "677306aaad38c3dfdadce991"
+  },
+  "name": "Terraria",
+  "genre": "Песочница",
+  "price": 133
+},
+{
+  "_id": {
+    "$oid": "678b8cae6289cd35170186cc"
+  },
+  "name": "Шашки онлайн",
+  "genre": "Стратегия",
+  "price": 2000
+},
+{
+  "_id": {
+    "$oid": "678b8ccd6289cd35170186cd"
+  },
+  "name": "Шахматы",
+  "genre": "Головоломка",
+  "price": 2000
+},
+{
+  "_id": {
+    "$oid": "678b8ce26289cd35170186ce"
+  },
+  "name": "Five nights at KubGU",
+  "genre": "Хоррор",
+  "price": 2000
+}]
