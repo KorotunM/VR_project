@@ -87,12 +87,13 @@ type BookingDocument struct {
 	TotalPrice   int
 }
 type BookingRequest struct {
-	Name        string `json:"name"`
-	Email       string `json:"email"`
-	Phone       string `json:"phone"`
-	Tariff      string `json:"tariff"`
-	BookingDate string `json:"booking_date"`
-	BookingTime string `json:"booking_time"`
+	Name        string   `json:"name"`
+	Email       string   `json:"email"`
+	Phone       string   `json:"phone"`
+	Tariff      string   `json:"tariff"`
+	BookingDate string   `json:"booking_date"`
+	BookingTime string   `json:"booking_time"`
+	Subjects    []string `json:"subjects"`
 }
 
 type TariffStats struct {

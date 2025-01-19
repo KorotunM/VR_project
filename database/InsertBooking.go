@@ -2,13 +2,14 @@ package database
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func InsertBooking(clientID, tariffID, date, timeSlot string) error {
+func InsertBooking(clientID, tariffID, date, timeSlot string, games []Games) error {
 	collection := MongoClient.Database("Vr").Collection("Booking")
 
 	// Преобразуем строки в ObjectID
@@ -30,15 +31,16 @@ func InsertBooking(clientID, tariffID, date, timeSlot string) error {
 
 	// Структура бронирования
 	booking := map[string]interface{}{
-		"client_id":    clientObjID,
-		"tariff_id":    tariffObjID,
-		"booking_date": bookingDate,
-		"booking_time": timeSlot,
+		"client_id":     clientObjID,
+		"tariff_id":     tariffObjID,
+		"booking_date":  bookingDate,
+		"booking_time":  timeSlot,
+		"general_games": games,
 	}
+	fmt.Println(games)
 	log.Println("Бронирование: ", booking)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-
 	_, err = collection.InsertOne(ctx, booking)
 	return err
 }

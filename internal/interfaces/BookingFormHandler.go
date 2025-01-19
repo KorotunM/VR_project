@@ -3,6 +3,7 @@ package interfaces
 import (
 	"VR_project/database"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 )
@@ -36,8 +37,32 @@ func HandleBooking(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Шаг 3: Записываем бронирование в Bookings
-	err = database.InsertBooking(clientID, tariffID, req.BookingDate, req.BookingTime)
+	// Шаг 3: Формируем список игр
+	// Формируем список игр
+
+	if err := r.ParseForm(); err != nil {
+		log.Printf("Error parsing form: %v", err)
+		http.Error(w, "Invalid form data", http.StatusBadRequest)
+		return
+	}
+
+	var generalGames []database.Games
+	generalGameIDs := req.Subjects
+	fmt.Println("HandleBooking --- ", generalGameIDs)
+	for _, gameID := range generalGameIDs {
+		// Получаем полный объект игры по ID
+		game, err := database.GetGameByID(gameID)
+		if err != nil {
+			log.Printf("Game not found: %v", err)
+			http.Error(w, "Invalid game ID", http.StatusBadRequest)
+			return
+		}
+		// Добавляем игру в список
+		generalGames = append(generalGames, game)
+	}
+
+	// Шаг 4: Записываем бронирование в Bookings
+	err = database.InsertBooking(clientID, tariffID, req.BookingDate, req.BookingTime, generalGames)
 	if err != nil {
 		log.Printf("Error inserting booking: %v", err)
 		http.Error(w, "Error inserting booking", http.StatusInternalServerError)

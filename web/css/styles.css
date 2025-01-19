@@ -83,7 +83,7 @@ main {
 
 .booking-form input, .booking-form select {
     padding: 10px;
-    margin-bottom: 15px;
+    
     border: none;
     border-radius: 5px;
     font-size: 16px;
@@ -113,7 +113,7 @@ main {
     text-decoration: underline;
 }
 
-.booking-form button {
+.sub-bt {
     padding: 15px;
     background-color: #00BFFF;
     border: none;
@@ -363,5 +363,100 @@ main {
 }
 #available-times {
     display: none; /* Скрываем блок изначально */
+}
+
+/* Общий стиль для контейнера */
+/* Основной контейнер для выпадающего списка */
+.dropdown-container {
+    position: relative;
+    display: inline-block;
+    width: 100%; /* Ширина на всю строку, как у других элементов формы */
+}
+
+/* Кнопка выпадающего списка */
+.dropdown-button {
+    width: 100%; /* Сделаем ширину кнопки как у других элементов формы */
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #93bdda;
+    color: #000; /* Текст чёрного цвета */
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.3s ease;
+    margin-bottom: 15px;
+}
+
+/* Эффект на кнопке при наведении */
+.dropdown-button:hover {
+    background-color: #FF4500; /* Немного более насыщенный цвет при наведении */
+}
+
+/* Список элементов выпадающего списка */
+.dropdown-list {
+    display: none; /* Скрыто по умолчанию */
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    transition: opacity 0.3s ease;
+}
+
+/* Стили для элементов списка */
+.subject-label {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 14px;
+    color: #000;
+    border-bottom: 1px solid #ddd;
+    transition: background 0.3s ease;
+}
+
+/* Эффект при наведении на элементы списка */
+.subject-label:hover {
+    background: #f9f9f9;
+}
+
+/* Стиль для чекбоксов */
+/* Стиль для чекбоксов */
+.subject-checkbox {
+    transition: transform 0.2s ease;
+    vertical-align: middle; /* Выровнять чекбокс по центру текста */
+    margin-right: 10px; 
+}
+
+
+
+/* Эффект при наведении на чекбокс */
+.subject-checkbox:hover {
+    transform: scale(1.1); /* Немного увеличиваем размер при наведении */
+}
+
+/* Убираем обводку у чекбоксов */
+.subject-checkbox:focus {
+    outline: none;
+}
+
+/* Визуальные эффекты для состояния списка */
+.dropdown-list.show {
+    display: block; /* При наличии класса "show" показывается список */
+    opacity: 1;
+}
+
+/* Плавное появление списка */
+.dropdown-list.hide {
+    opacity: 0;
+    display: block;
 }
 

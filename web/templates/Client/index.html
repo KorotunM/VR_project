@@ -86,15 +86,45 @@
                     <button  type="button" id="cancel-selection">Отменить выбор</button>
                 </div>
 
+                <label for="subjects">Общие игры:</label>
+                <div class="dropdown-container">
+                    <button type="button" class="dropdown-button" onclick="toggleDropdown()">Выберите дополнительно игры по желанию</button>
+                    <div class="dropdown-list" id="dropdown-subjects">
+                        {{range .Games}}
+                        <label class="subject-label">
+                            <input type="checkbox" name="subjects" value="{{.Id}}" class="subject-checkbox"> {{.Name}} - {{.Price}}
+                        </label>
+                        {{end}}
+                    </div>
+                </div>
+
                 <script src="../web/js/calendar.js" defer></script>
                 <script src="../web/js/ClearForm.js" defer></script>
-    
-                <div class="rules">
-                    <input type="checkbox" id="rules" name="rules" required>
-                    <label for="rules">Я ознакомлен с <a href="#">правилами клуба</a></label>
-                </div>
-    
-                <button type="submit">Забронировать</button>
+
+                <script>
+                 function toggleDropdown() {
+                    var dropdown = document.getElementById("dropdown-subjects");
+                    if (dropdown.style.display === "none" || dropdown.style.display === "") {
+                        dropdown.style.display = "block";
+                    } else {
+                        dropdown.style.display = "none";
+                    }
+                }
+        
+                // Закрытие выпадающего списка, если пользователь кликнул вне его области, кроме элементов списка
+                window.onclick = function(event) {
+                    if (!event.target.matches('.dropdown-button') && !event.target.closest('.dropdown-list')) {
+                        var dropdowns = document.getElementsByClassName("dropdown-list");
+                        for (var i = 0; i < dropdowns.length; i++) {
+                            var openDropdown = dropdowns[i];
+                            if (openDropdown.style.display === "block") {
+                                openDropdown.style.display = "none";
+                            }
+                        }
+                    }
+                }
+                </script>
+                <button class = "sub-bt" type="submit">Забронировать</button>
             </form>
         </div>
     </main>

@@ -49,13 +49,15 @@ document.addEventListener("DOMContentLoaded", () => {
     bookingForm.addEventListener("submit", function (e) {
         e.preventDefault();
 
+        const selectedGames = Array.from(document.querySelectorAll('input[name="subjects"]:checked')).map(input => input.value);
         const formData = {
             name: document.getElementById("name").value,
             email: document.getElementById("email").value,
             phone: document.getElementById("phone").value,
             tariff: document.getElementById("tariff-select").value,
             booking_date: document.getElementById("booking-date").value,
-            booking_time: selectedTime || "12:00"
+            booking_time: selectedTime || "12:00",
+            subjects: selectedGames
         };
 
         fetch("/booking", {

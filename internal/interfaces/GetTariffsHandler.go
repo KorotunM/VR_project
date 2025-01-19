@@ -17,6 +17,11 @@ func TariffHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	games, err := database.GetAllGeneralGames()
+	if err != nil {
+		http.Error(w, "Ошибка получения данных об играх", http.StatusInternalServerError)
+		return
+	}
 	// Загружаем шаблон
 	tmpl, err := template.ParseFiles("../web/templates/Client/index.html")
 	if err != nil {
@@ -28,8 +33,9 @@ func TariffHandler(w http.ResponseWriter, r *http.Request) {
 	// Передаём данные тарифов в шаблон
 	data := map[string]interface{}{
 		"Tariffs": tariffs,
+		"Games":   games,
 	}
-
+	//fmt.Println(data)
 	// Рендеринг шаблона с данными
 	if err := tmpl.Execute(w, data); err != nil {
 		log.Println("Ошибка при выполнении шаблона:", err)
